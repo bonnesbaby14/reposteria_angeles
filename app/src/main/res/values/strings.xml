@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">reposteria_angeles</string>
+    <string name="app_name">REPOSTERIA ANGELES</string>
+    <string name="iniciar">INICIAR SESION</string>
+    <string name="correo">Correo electrónico</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="ventas">VENTAS</string>
+    <string name="encontras_venta">Encontrar venta</string>
+    <string name="producto">Productos</string>
+    <string name="venta">Venta Total</string>
 </resources>

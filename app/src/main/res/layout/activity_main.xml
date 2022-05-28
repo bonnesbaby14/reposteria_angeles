@@ -4,15 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/txtTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="56dp"
+        android:fontFamily="serif"
+        android:text="@string/iniciar"
+        android:textColor="#040404"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTitulo"
+        app:layout_constraintStart_toStartOf="@+id/txtTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
+        app:srcCompat="@mipmap/logo" />
+
+    <EditText
+        android:id="@+id/txtCorreo"
+        android:layout_width="316dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/correo"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        app:layout_constraintEnd_toEndOf="@+id/imgLogo"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="@+id/imgLogo"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
+
+    <EditText
+        android:id="@+id/txtContrasenia"
+        android:layout_width="316dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/contraseña"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/txtCorreo"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtCorreo"
+        app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
+
+    <Button
+        android:id="@+id/btnIniciar"
+        android:layout_width="316dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/borde"
+        android:onClick="iniciarSesion"
+        android:text="@string/iniciar"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/txtContrasenia"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtContrasenia"
+        app:layout_constraintTop_toBottomOf="@+id/txtContrasenia" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

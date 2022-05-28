@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ProductoActivity">
+
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:drawableLeft="@drawable/buscar"
+                android:text="Encontrar venta"
+                android:textColor="#B20B0B0B"
+                app:layout_constraintBottom_toTopOf="@+id/spVenta"
+                app:layout_constraintEnd_toEndOf="@+id/spVenta"
+                app:layout_constraintHorizontal_bias="0.055"
+                app:layout_constraintStart_toStartOf="@+id/spVenta" />
+
+            <TextView
+                android:id="@+id/txtTitulo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="serif"
+                android:text="@string/ventas"
+                android:textColor="#040404"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/txtTitulo2"
+                app:layout_constraintHorizontal_bias="0.481"
+                app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
+                app:layout_constraintTop_toBottomOf="@+id/txtTitulo2"
+                app:srcCompat="@drawable/ic_baseline_attach_money_24" />
+
+
+            <Spinner
+                android:id="@+id/spVenta"
+                android:layout_width="310dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/edit_text"
+                app:layout_constraintEnd_toEndOf="@+id/txtTitulo2"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <Spinner
+                android:id="@+id/spCliente"
+                android:layout_width="310dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/edit_text"
+                app:layout_constraintEnd_toEndOf="@+id/txtTitulo2"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
+                app:layout_constraintTop_toBottomOf="@+id/spVenta"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <Spinner
+                android:id="@+id/spProducto"
+                android:layout_width="310dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/edit_text"
+                app:layout_constraintEnd_toEndOf="@+id/txtTitulo2"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
+                app:layout_constraintTop_toBottomOf="@+id/spCliente"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:drawableLeft="@drawable/buscar"
+                android:text="Encontrar venta"
+                android:textColor="#B20B0B0B"
+                app:layout_constraintBottom_toTopOf="@+id/spVenta"
+                app:layout_constraintEnd_toEndOf="@+id/spVenta"
+                app:layout_constraintHorizontal_bias="0.055"
+                app:layout_constraintStart_toStartOf="@+id/spVenta" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_baseline_emoji_people_24"
+                android:text="Cliente"
+                android:textColor="#B20B0B0B"
+                app:layout_constraintBottom_toTopOf="@+id/spCliente"
+                app:layout_constraintEnd_toEndOf="@+id/spCliente"
+                app:layout_constraintHorizontal_bias="0.058"
+                app:layout_constraintStart_toStartOf="@+id/spCliente" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_baseline_fastfood_24"
+                android:text="@string/producto"
+                android:textColor="#B20B0B0B"
+                app:layout_constraintBottom_toTopOf="@+id/spProducto"
+                app:layout_constraintEnd_toEndOf="@+id/spProducto"
+                app:layout_constraintHorizontal_bias="0.057"
+                app:layout_constraintStart_toStartOf="@+id/spProducto" />
+
+            <EditText
+                android:id="@+id/txtVentaTotal"
+                android:layout_width="306dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/edit_text"
+                android:drawableLeft="@drawable/ic_baseline_attach_money_24"
+                android:ems="10"
+                android:hint="@string/venta"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#81000000"
+                app:layout_constraintEnd_toEndOf="@+id/spProducto"
+                app:layout_constraintStart_toStartOf="@+id/spProducto"
+                app:layout_constraintTop_toBottomOf="@+id/spProducto" />
+
+            <EditText
+                android:id="@+id/txtProductosVendidos"
+                android:layout_width="306dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/edit_text"
+                android:drawableLeft="@drawable/ic_baseline_123_24"
+                android:ems="10"
+                android:hint="# Productos vendidos"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#81000000"
+                app:layout_constraintEnd_toEndOf="@+id/spProducto"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/spProducto"
+                app:layout_constraintTop_toBottomOf="@+id/txtNombreVenta" />
+
+            <EditText
+                android:id="@+id/txtNombreVenta"
+                android:layout_width="306dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/edit_text"
+                android:drawableLeft="@drawable/ic_baseline_edit_24"
+                android:ems="10"
+                android:hint="Nombre de la venta"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#81000000"
+                app:layout_constraintEnd_toEndOf="@+id/spProducto"
+                app:layout_constraintStart_toStartOf="@+id/spProducto"
+                app:layout_constraintTop_toBottomOf="@+id/txtVentaTotal" />
+
+            <EditText
+                android:id="@+id/txtDescripcion"
+                android:layout_width="306dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/edit_text"
+                android:drawableLeft="@drawable/ic_baseline_edit_24"
+                android:ems="10"
+                android:hint="Descripción"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#81000000"
+                app:layout_constraintEnd_toEndOf="@+id/spProducto"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/spProducto"
+                app:layout_constraintTop_toBottomOf="@+id/txtProductosVendidos" />
+
+            <TextView
+                android:id="@+id/txtListadoVentas"
+                android:layout_width="294dp"
+                android:layout_height="182dp"
+                android:layout_marginTop="112dp"
+                android:text="Listado de ventas"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtDescripcion" />
+
+            <ImageButton
+                android:id="@+id/btnAgregar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="32dp"
+                android:background="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="@+id/txtDescripcion"
+                app:layout_constraintHorizontal_bias="0.023"
+                app:layout_constraintStart_toStartOf="@+id/txtDescripcion"
+                app:layout_constraintTop_toBottomOf="@+id/txtDescripcion"
+                app:srcCompat="@drawable/ic_baseline_add_24"
+                tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/btnEditar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="@+id/txtDescripcion"
+                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintStart_toStartOf="@+id/txtDescripcion"
+                app:layout_constraintTop_toBottomOf="@+id/txtDescripcion"
+                app:srcCompat="@drawable/edit"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/btnEliminar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="@+id/txtDescripcion"
+                app:layout_constraintHorizontal_bias="0.984"
+                app:layout_constraintStart_toStartOf="@+id/txtDescripcion"
+                app:layout_constraintTop_toBottomOf="@+id/txtDescripcion"
+                app:srcCompat="@drawable/ic_baseline_delete_24"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
