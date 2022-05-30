@@ -5,6 +5,13 @@
     <string name="contraseña">Contraseña</string>
     <string name="ventas">VENTAS</string>
     <string name="encontras_venta">Encontrar venta</string>
-    <string name="producto">Productos</string>
+    <string name="producto">PRODUCTOS</string>
     <string name="venta">Venta Total</string>
+    <string name="nombre">Nombre</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="precio">Precio</string>
+    <string name="fecha">Fecha de caducidad</string>
+    <string name="descripcion">Descripción</string>
+
+
 </resources>

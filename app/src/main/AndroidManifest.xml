@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reposteria_angeles">
         <activity
+            android:name=".VentaActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProductoActivity"
             android:exported="false" />
         <activity

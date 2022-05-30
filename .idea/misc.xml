@@ -3,16 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/add.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/borde.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/boton.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/buscar.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/canasta.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/dinero.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/edit.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/edit_text.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_123_24.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_attach_money_24.xml" value="0.1" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_date_range_24.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.1" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/layout/activity_producto.xml" value="0.22" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/layout/activity_producto.xml" value="0.21565217391304348" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/reposteria_angeles/app/src/main/res/layout/activity_venta.xml" value="0.25" />
       </map>
     </option>
   </component>
