@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     public void iniciarSesion(View view){
 
 
-        Intent intent = new Intent(MainActivity.this, VentaActivity.class);
+        Intent intent = new Intent(MainActivity.this, MenuActivity.class);
         DBHELPER dbhelper=new DBHELPER(MainActivity.this);
         SQLiteDatabase db= dbhelper.getReadableDatabase();
         Cursor cursor=db.rawQuery("select * from usuarios where usuario='admin' and password='admin'",null);
