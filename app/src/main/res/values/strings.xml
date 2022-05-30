@@ -4,8 +4,10 @@
     <string name="correo">Correo electrónico</string>
     <string name="contraseña">Contraseña</string>
     <string name="ventas">VENTAS</string>
+    <string name="gastos">GASTOS</string>
     <string name="encontras_venta">Encontrar venta</string>
-    <string name="producto">PRODUCTOS</string>
+    <string name="producto_title">PRODUCTOS</string>
+    <string name="producto">Productos</string>
     <string name="venta">Venta Total</string>
     <string name="nombre">Nombre</string>
     <string name="cantidad">Cantidad</string>

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void iniciarSesion(View view){
-        Intent intent = new Intent(MainActivity.this, VentaActivity.class);
+        Intent intent = new Intent(MainActivity.this, GastosActivity.class);
         startActivity(intent);
     }
 }
