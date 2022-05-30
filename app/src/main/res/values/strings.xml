@@ -5,9 +5,13 @@
     <string name="contraseña">Contraseña</string>
     <string name="ventas">VENTAS</string>
     <string name="gastos">GASTOS</string>
+    <string name="cliente">CLIENTES</string>
     <string name="encontras_venta">Encontrar venta</string>
     <string name="producto_title">PRODUCTOS</string>
     <string name="producto">Productos</string>
+    <string name="direccion">Dirección</string>
+    <string name="telefono">Teléfono</string>
+    <string name="preferencias">Preferencias</string>
     <string name="venta">Venta Total</string>
     <string name="nombre">Nombre</string>
     <string name="cantidad">Cantidad</string>

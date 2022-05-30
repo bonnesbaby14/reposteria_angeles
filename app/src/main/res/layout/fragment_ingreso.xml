@@ -75,7 +75,7 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <Spinner
-                android:id="@+id/spBuscarGasto"
+                android:id="@+id/spBuscarCliente"
                 android:layout_width="310dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="40dp"
@@ -95,7 +95,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/txtTitulo"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="@+id/txtTitulo"
-                app:layout_constraintTop_toBottomOf="@+id/spBuscarGasto"
+                app:layout_constraintTop_toBottomOf="@+id/spBuscarCliente"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
@@ -105,10 +105,10 @@
                 android:drawableLeft="@drawable/ic_baseline_emoji_people_24"
                 android:text="Cliente"
                 android:textColor="#B20B0B0B"
-                app:layout_constraintBottom_toTopOf="@+id/spBuscarGasto"
-                app:layout_constraintEnd_toEndOf="@+id/spBuscarGasto"
+                app:layout_constraintBottom_toTopOf="@+id/spBuscarCliente"
+                app:layout_constraintEnd_toEndOf="@+id/spBuscarCliente"
                 app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="@+id/spBuscarGasto" />
+                app:layout_constraintStart_toStartOf="@+id/spBuscarCliente" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -123,7 +123,7 @@
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto" />
 
             <EditText
-                android:id="@+id/txtNombreGasto"
+                android:id="@+id/txtNombreCliente"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="32dp"
@@ -140,7 +140,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/spBuscarProductoGasto" />
 
             <EditText
-                android:id="@+id/txtProductoGastos"
+                android:id="@+id/txtTelefonoCliente"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -155,10 +155,10 @@
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtCostoGasto" />
+                app:layout_constraintTop_toBottomOf="@+id/txtDireccionCliente" />
 
             <EditText
-                android:id="@+id/txtCostoGasto"
+                android:id="@+id/txtDireccionCliente"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -172,10 +172,10 @@
                 android:textColorHint="#81000000"
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtNombreGasto" />
+                app:layout_constraintTop_toBottomOf="@+id/txtNombreCliente" />
 
             <EditText
-                android:id="@+id/txtDescripcionGasto"
+                android:id="@+id/txtPreferenciaCliente"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -190,10 +190,10 @@
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtProductoGastos" />
+                app:layout_constraintTop_toBottomOf="@+id/txtTelefonoCliente" />
 
             <TextView
-                android:id="@+id/txtListadoGasto"
+                android:id="@+id/txtListadoCliente"
                 android:layout_width="294dp"
                 android:layout_height="182dp"
                 android:layout_marginTop="112dp"
@@ -203,44 +203,44 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtDescripcionGasto" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente" />
 
             <ImageButton
-                android:id="@+id/btnAgregarGasto"
+                android:id="@+id/btnAgregarCliente"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:background="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtDescripcionGasto"
+                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
                 app:layout_constraintHorizontal_bias="0.023"
-                app:layout_constraintStart_toStartOf="@+id/txtDescripcionGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtDescripcionGasto"
+                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
                 app:srcCompat="@drawable/ic_baseline_add_24"
                 tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/btnEditarGasto"
+                android:id="@+id/btnEditarCliente"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtDescripcionGasto"
+                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
                 app:layout_constraintHorizontal_bias="0.492"
-                app:layout_constraintStart_toStartOf="@+id/txtDescripcionGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtDescripcionGasto"
+                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
                 app:srcCompat="@drawable/edit"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/btnEliminarGasto"
+                android:id="@+id/btnEliminarCliente"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtDescripcionGasto"
+                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
                 app:layout_constraintHorizontal_bias="0.984"
-                app:layout_constraintStart_toStartOf="@+id/txtDescripcionGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtDescripcionGasto"
+                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
                 app:srcCompat="@drawable/ic_baseline_delete_24"
                 tools:ignore="SpeakableTextPresentCheck" />
 

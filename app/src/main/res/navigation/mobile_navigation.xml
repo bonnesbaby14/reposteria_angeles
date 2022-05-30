@@ -22,4 +22,12 @@
         android:name="com.example.reposteria_angeles.ui.gasto.GastoFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_gasto" />
+
+    <fragment
+        android:id="@+id/nav_cliente"
+        android:name="com.example.reposteria_angeles.ui.cliente.ClienteFragment"
+        android:label="Cliente"
+        tools:layout="@layout/fragment_cliente" />
+
+
 </navigation>

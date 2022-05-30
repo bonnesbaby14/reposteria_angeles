@@ -22,5 +22,9 @@
             android:id="@+id/nav_cliente"
             android:icon="@drawable/ic_baseline_emoji_people_24"
             android:title="Clientes" />
+        <item
+            android:id="@+id/nav_salir"
+            android:icon="@drawable/ic_baseline_login_24"
+            android:title="Salir" />
     </group>
 </menu>
