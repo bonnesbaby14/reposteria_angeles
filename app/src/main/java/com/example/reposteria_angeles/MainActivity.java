@@ -7,33 +7,115 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    EditText usuario;
+    EditText contra;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        try {
+        InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
+        if (archivo==null) {
+
+            grabar();
+        }
+        } catch (IOException e) {
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+    private boolean existe(String[] archivos, String archbusca) {
+        for (int f = 0; f < archivos.length; f++)
+            if (archbusca.equals(archivos[f]))
+                return true;
+        return false;
+    }
+
+    public void grabar() {
+        try {
+            OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_PRIVATE));
+            archivo.write("admin/admin/admin/admin");
+            archivo.flush();
+            archivo.close();
+        } catch (IOException e) {
+        }
+        Toast t = Toast.makeText(this, "APP INICIADA POR PRIMERA VEZ",Toast.LENGTH_SHORT);
+        t.show();
+
+    }
+
+    public String login(String usuario,String contra){
+        try {
+            InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
+            BufferedReader br = new BufferedReader(archivo);
+            String linea = br.readLine();
+            String todo = "";
+            while (linea != null) {
+                String [] split=linea.split("/");
+                Log.d("DATA",split.toString());
+                if(split[0].equals(usuario)){
+                    if(split[1].equals(contra)){
+                        return "correcto";
+                    }
+                    return "contrasena";
+
+
+                }
+                linea = br.readLine();
+            }
+            br.close();
+            archivo.close();
+            return "usuario";
+
+
+        }catch(IOException e){
+
+        }
+        return "null";
     }
 
     public void iniciarSesion(View view){
 
 
+        usuario= findViewById(R.id.txtCorreo);
+        contra= findViewById(R.id.txtContrasenia);
+
+
         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-        DBHELPER dbhelper=new DBHELPER(MainActivity.this);
-        SQLiteDatabase db= dbhelper.getReadableDatabase();
-        Cursor cursor=db.rawQuery("select * from usuarios where usuario='admin' and password='admin'",null);
 
+        switch (login(usuario.getText().toString(),contra.getText().toString())){
 
-        if(cursor.moveToFirst()){
-            startActivity(intent);
-        }else{
-            Toast toast=Toast.makeText(this,"El usuario no se encuestra en la base de datos",Toast.LENGTH_LONG);
-            toast.show();
+            case "correcto":
+                startActivity(intent);
+                break;
+
+            case "usuario":
+                Toast toast=Toast.makeText(this,"Usuario incorrecta",Toast.LENGTH_SHORT);
+                toast.show();
+
+                break;
+
+            case "contrasena":
+                Toast toast2=Toast.makeText(this,"Contraseña incorrecta",Toast.LENGTH_SHORT);
+toast2.show();
+                break;
+
         }
+
+
+
+
 
     }
 }
