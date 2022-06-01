@@ -35,12 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-    private boolean existe(String[] archivos, String archbusca) {
-        for (int f = 0; f < archivos.length; f++)
-            if (archbusca.equals(archivos[f]))
-                return true;
-        return false;
-    }
+
 
     public void grabar() {
         try {
