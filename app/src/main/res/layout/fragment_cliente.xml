@@ -73,7 +73,7 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <EditText
-                android:id="@+id/txtNombreCliente"
+                android:id="@+id/txtNombre"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
@@ -91,7 +91,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/spBuscarCliente" />
 
             <EditText
-                android:id="@+id/txtTelefonoCliente"
+                android:id="@+id/txtPrecio"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -103,12 +103,12 @@
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textColorHint="#81000000"
-                app:layout_constraintEnd_toEndOf="@+id/txtDireccionCliente"
-                app:layout_constraintStart_toStartOf="@+id/txtDireccionCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtDireccionCliente" />
+                app:layout_constraintEnd_toEndOf="@+id/txtCantidad"
+                app:layout_constraintStart_toStartOf="@+id/txtCantidad"
+                app:layout_constraintTop_toBottomOf="@+id/txtCantidad" />
 
             <EditText
-                android:id="@+id/txtDireccionCliente"
+                android:id="@+id/txtCantidad"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -120,12 +120,12 @@
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textColorHint="#81000000"
-                app:layout_constraintEnd_toEndOf="@+id/txtNombreCliente"
-                app:layout_constraintStart_toStartOf="@+id/txtNombreCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtNombreCliente" />
+                app:layout_constraintEnd_toEndOf="@+id/txtNombre"
+                app:layout_constraintStart_toStartOf="@+id/txtNombre"
+                app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
 
             <EditText
-                android:id="@+id/txtPreferenciaCliente"
+                android:id="@+id/txtCaduccidad"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="36dp"
@@ -137,9 +137,9 @@
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textColorHint="#81000000"
-                app:layout_constraintEnd_toEndOf="@+id/txtTelefonoCliente"
-                app:layout_constraintStart_toStartOf="@+id/txtTelefonoCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtTelefonoCliente" />
+                app:layout_constraintEnd_toEndOf="@+id/txtPrecio"
+                app:layout_constraintStart_toStartOf="@+id/txtPrecio"
+                app:layout_constraintTop_toBottomOf="@+id/txtPrecio" />
 
             <TextView
                 android:id="@+id/txtListadoCliente"
@@ -152,18 +152,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente" />
+                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad" />
 
             <ImageButton
-                android:id="@+id/btnAgregarCliente"
+                android:id="@+id/btnAgregarProducto"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:background="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
                 app:layout_constraintHorizontal_bias="0.023"
-                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
+                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
                 app:srcCompat="@drawable/ic_baseline_add_24"
                 tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
@@ -173,10 +173,10 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
                 app:layout_constraintHorizontal_bias="0.492"
-                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
+                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
                 app:srcCompat="@drawable/edit"
                 tools:ignore="SpeakableTextPresentCheck" />
 
@@ -186,10 +186,10 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
                 android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
                 app:layout_constraintHorizontal_bias="0.984"
-                app:layout_constraintStart_toStartOf="@+id/txtPreferenciaCliente"
-                app:layout_constraintTop_toBottomOf="@+id/txtPreferenciaCliente"
+                app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
+                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
                 app:srcCompat="@drawable/ic_baseline_delete_24"
                 tools:ignore="SpeakableTextPresentCheck" />
 

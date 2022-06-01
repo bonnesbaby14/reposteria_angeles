@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,12 @@ import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 public class ProductoFragment extends Fragment {
 
     private FragmentProductoBinding binding;
+    EditText nombre;
+    EditText caducidad;
+    EditText cantidad;
+    EditText precio;
+    EditText descripcion;
+    Button agregar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -25,8 +33,12 @@ public class ProductoFragment extends Fragment {
         binding = FragmentProductoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-       // final TextView textView = binding.textHome;
-        //productoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        agregar=root.findViewById(R .id.btnAgregarProducto);
+
+
+
+
         return root;
     }
 
@@ -35,4 +47,11 @@ public class ProductoFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    void agregarProducto(){
+
+
+
+    }
+
 }
