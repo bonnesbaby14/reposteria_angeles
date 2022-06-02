@@ -67,10 +67,16 @@ agregar.setOnClickListener(new View.OnClickListener() {
          precio= root.findViewById(R.id.txtPrecio);
          descripcion= root.findViewById(R.id.txtDescripcion);
 
+grabar(nombre.getText().toString(),cantidad.getText().toString(),precio.getText().toString(),caducidad.getText().toString(),descripcion.getText().toString());
 
+nombre.setText("");
+caducidad.setText("");
+cantidad.setText("");
+precio.setText("");
+caducidad.setText("");
+descripcion.setText(" ");
 
-
-        Toast tost = Toast.makeText(getContext(),"Holi",Toast.LENGTH_SHORT);
+        Toast tost = Toast.makeText(getContext(),"Producto Gurdado",Toast.LENGTH_LONG);
         tost.show();
     }
 });
@@ -89,8 +95,8 @@ agregar.setOnClickListener(new View.OnClickListener() {
 
     public void grabar(String nombre,String cantidad, String  precio, String fecha,String descipcion) {
         try {
-            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_PRIVATE));
-            archivo.write(nombre+"/"+cantidad+"/"+precio+"/"+fecha+"/"+descipcion);
+            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
+            archivo.write("\n"+nombre+"/"+cantidad+"/"+precio+"/"+fecha+"/"+descipcion);
             archivo.flush();
             archivo.close();
 
