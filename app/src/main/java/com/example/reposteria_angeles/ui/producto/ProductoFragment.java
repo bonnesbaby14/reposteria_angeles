@@ -5,9 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,9 +23,11 @@ import com.example.reposteria_angeles.MainActivity;
 import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 import com.example.reposteria_angeles.R;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class ProductoFragment extends Fragment {
 
@@ -33,9 +38,14 @@ public class ProductoFragment extends Fragment {
     EditText precio;
     EditText descripcion;
     ImageButton agregar;
+    Spinner spinner;
+    ArrayList<String> productos;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        productos=new ArrayList<String>();
+        binding = FragmentProductoBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
         ProductoViewModel productoViewModel =
                 new ViewModelProvider(this).get(ProductoViewModel.class);
         try {
@@ -43,6 +53,33 @@ public class ProductoFragment extends Fragment {
             if (archivo==null) {
 
                 grabar("producto","100","10","00-00-0000","productoDescripcion");
+            }else{
+
+                BufferedReader br = new BufferedReader(archivo);
+                String linea = br.readLine();
+                String todo = "";
+                while (linea != null) {
+                    String [] split=linea.split("/");
+                    Log.d("DATA",split.toString());
+                    productos.add(linea);
+                    linea = br.readLine();
+                }
+                br.close();
+                archivo.close();
+                spinner =root.findViewById(R.id.spBuscarProducto);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, productos);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+spinner.setAdapter(arrayAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String tutorialsName = parent.getItemAtPosition(position).toString();
+                        Toast.makeText(parent.getContext(), "Selected: " + tutorialsName,          Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView <?> parent) {
+                    }
+                });
             }
         } catch (IOException e) {
             Log.d("archivo",e.toString());
@@ -51,8 +88,7 @@ public class ProductoFragment extends Fragment {
             Toast tost = Toast.makeText(getContext(),"Se creo el archivo productos",Toast.LENGTH_SHORT);
             tost.show();
         }
-        binding = FragmentProductoBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
 
         agregar= (ImageButton) root.findViewById(R.id.btnAgregarP);
 
