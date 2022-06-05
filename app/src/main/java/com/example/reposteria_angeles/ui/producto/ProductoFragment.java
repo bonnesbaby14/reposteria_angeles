@@ -37,86 +37,109 @@ public class ProductoFragment extends Fragment {
     EditText cantidad;
     EditText precio;
     EditText descripcion;
-    ImageButton agregar;
+    ImageButton agregar,editar;
+
     Spinner spinner;
     ArrayList<String> productos;
-
+    String puntero;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        productos=new ArrayList<String>();
+        productos = new ArrayList<String>();
         binding = FragmentProductoBinding.inflate(inflater, container, false);
+
         View root = binding.getRoot();
+        nombre = root.findViewById(R.id.txtNombre);
+        caducidad = root.findViewById(R.id.txtCaduccidad);
+        cantidad = root.findViewById(R.id.txtCantidad);
+        precio = root.findViewById(R.id.txtPrecio);
+        descripcion = root.findViewById(R.id.txtDescripcion);
         ProductoViewModel productoViewModel =
                 new ViewModelProvider(this).get(ProductoViewModel.class);
         try {
             InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
-            if (archivo==null) {
+            if (archivo == null) {
 
-                grabar("producto","100","10","00-00-0000","productoDescripcion");
-            }else{
+                grabar("producto", "100", "10", "00-00-0000", "productoDescripcion");
+            } else {
 
                 BufferedReader br = new BufferedReader(archivo);
                 String linea = br.readLine();
                 String todo = "";
                 while (linea != null) {
-                    String [] split=linea.split("/");
-                    Log.d("DATA",split.toString());
+                    String[] split = linea.split("/");
+                    Log.d("DATA", split.toString());
                     productos.add(linea);
                     linea = br.readLine();
                 }
                 br.close();
                 archivo.close();
-                spinner =root.findViewById(R.id.spBuscarProducto);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, productos);
+                spinner = root.findViewById(R.id.spBuscarProducto);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, productos);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-spinner.setAdapter(arrayAdapter);
+                spinner.setAdapter(arrayAdapter);
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String tutorialsName = parent.getItemAtPosition(position).toString();
-                        Toast.makeText(parent.getContext(), "Selected: " + tutorialsName,          Toast.LENGTH_LONG).show();
+                        String[] producto = parent.getItemAtPosition(position).toString().split("/");
+                        if(producto.length>1) {
+                            puntero=parent.getItemAtPosition(position).toString();
+
+                            nombre.setText(producto[0].toString());
+                            cantidad.setText(producto[1].toString());
+                            precio.setText(producto[2].toString());
+                            caducidad.setText(producto[3].toString());
+                            descripcion.setText(producto[4].toString());
+                        }
+
                     }
+
                     @Override
-                    public void onNothingSelected(AdapterView <?> parent) {
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
                 });
             }
         } catch (IOException e) {
-            Log.d("archivo",e.toString());
+            Log.d("archivo", e.toString());
 
-            grabar("producto","100","10","00-00-0000","productoDescripcion");
-            Toast tost = Toast.makeText(getContext(),"Se creo el archivo productos",Toast.LENGTH_SHORT);
+            grabar("producto", "100", "10", "00-00-0000", "productoDescripcion");
+            Toast tost = Toast.makeText(getContext(), "Se creo el archivo productos", Toast.LENGTH_SHORT);
             tost.show();
         }
 
 
-        agregar= (ImageButton) root.findViewById(R.id.btnAgregarP);
+        agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
+        editar=(ImageButton) root.findViewById(R.id.btnEditarProducto);
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(),puntero,Toast.LENGTH_SHORT).show();
 
-agregar.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
+                
+
+            }
+        });
+
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
 
-         nombre= root.findViewById(R.id.txtNombre);
-        caducidad= root.findViewById(R.id.txtCaduccidad);
-         cantidad= root.findViewById(R.id.txtCantidad);
-         precio= root.findViewById(R.id.txtPrecio);
-         descripcion= root.findViewById(R.id.txtDescripcion);
 
-grabar(nombre.getText().toString(),cantidad.getText().toString(),precio.getText().toString(),caducidad.getText().toString(),descripcion.getText().toString());
 
-nombre.setText("");
-caducidad.setText("");
-cantidad.setText("");
-precio.setText("");
-caducidad.setText("");
-descripcion.setText(" ");
+                grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
 
-        Toast tost = Toast.makeText(getContext(),"Producto Gurdado",Toast.LENGTH_LONG);
-        tost.show();
-    }
-});
+                nombre.setText("");
+                caducidad.setText("");
+                cantidad.setText("");
+                precio.setText("");
+                caducidad.setText("");
+                descripcion.setText(" ");
 
+                Toast tost = Toast.makeText(getContext(), "Producto Gurdado", Toast.LENGTH_LONG);
+                tost.show();
+            }
+        });
 
 
         return root;
@@ -129,10 +152,10 @@ descripcion.setText(" ");
     }
 
 
-    public void grabar(String nombre,String cantidad, String  precio, String fecha,String descipcion) {
+    public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
-            archivo.write("\n"+nombre+"/"+cantidad+"/"+precio+"/"+fecha+"/"+descipcion);
+            archivo.write("\n" + nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion);
             archivo.flush();
             archivo.close();
 
