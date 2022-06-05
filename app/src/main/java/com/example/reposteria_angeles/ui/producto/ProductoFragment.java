@@ -53,8 +53,112 @@ public class ProductoFragment extends Fragment {
         cantidad = root.findViewById(R.id.txtCantidad);
         precio = root.findViewById(R.id.txtPrecio);
         descripcion = root.findViewById(R.id.txtDescripcion);
+        spinner = root.findViewById(R.id.spBuscarProducto);
         ProductoViewModel productoViewModel =
                 new ViewModelProvider(this).get(ProductoViewModel.class);
+
+
+
+        agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
+        editar=(ImageButton) root.findViewById(R.id.btnEditarProducto);
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+                    String todo="";
+                    while (linea != null) {
+                        if(linea.equals(puntero)){
+                            String[] aux=linea.split("/");
+                            aux[0]=nombre.getText().toString();
+                            aux[1]=cantidad.getText().toString();
+                            aux[2]=precio.getText().toString();
+                            aux[3]=caducidad.getText().toString();
+                            aux[4]=descripcion.getText().toString();
+                            String resultado=aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4]+"\n";
+                            todo=todo+resultado;
+
+                        }else{
+                            todo=todo+linea+"\n";
+                        }
+
+
+                        linea = br.readLine();
+                    }
+
+                    br.close();
+                    archivo.close();
+
+                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_PRIVATE));
+                    archivo2.write(todo);
+                    archivo2.flush();
+                    archivo2.close();
+
+                    Toast.makeText(getContext(), "Producto editado",Toast.LENGTH_LONG).show();
+
+                    nombre.setText("");
+                    caducidad.setText("");
+                    cantidad.setText("");
+                    precio.setText("");
+                    caducidad.setText("");
+                    descripcion.setText(" ");
+                    recargarProductos();
+                }catch(IOException e){
+
+                }
+
+
+            }
+        });
+
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+
+                grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
+
+                nombre.setText("");
+                caducidad.setText("");
+                cantidad.setText("");
+                precio.setText("");
+                caducidad.setText("");
+                descripcion.setText(" ");
+                recargarProductos();
+                Toast tost = Toast.makeText(getContext(), "Producto Gurdado", Toast.LENGTH_LONG);
+                tost.show();
+
+            }
+        });
+
+        recargarProductos();
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
+    public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
+        try {
+            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
+            archivo.write( nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion+"\n" );
+            archivo.flush();
+            archivo.close();
+
+        } catch (IOException e) {
+        }
+
+
+    }
+    public void recargarProductos(){
         try {
             InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
             if (archivo == null) {
@@ -65,6 +169,8 @@ public class ProductoFragment extends Fragment {
                 BufferedReader br = new BufferedReader(archivo);
                 String linea = br.readLine();
                 String todo = "";
+                productos.clear();
+                productos.add("Seleciona...");
                 while (linea != null) {
                     String[] split = linea.split("/");
                     Log.d("DATA", split.toString());
@@ -73,7 +179,7 @@ public class ProductoFragment extends Fragment {
                 }
                 br.close();
                 archivo.close();
-                spinner = root.findViewById(R.id.spBuscarProducto);
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, productos);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(arrayAdapter);
@@ -105,64 +211,8 @@ public class ProductoFragment extends Fragment {
             grabar("producto", "100", "10", "00-00-0000", "productoDescripcion");
             Toast tost = Toast.makeText(getContext(), "Se creo el archivo productos", Toast.LENGTH_SHORT);
             tost.show();
+            recargarProductos();
         }
-
-
-        agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
-        editar=(ImageButton) root.findViewById(R.id.btnEditarProducto);
-        editar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(),puntero,Toast.LENGTH_SHORT).show();
-
-                
-
-            }
-        });
-
-        agregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-
-
-                grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
-
-                nombre.setText("");
-                caducidad.setText("");
-                cantidad.setText("");
-                precio.setText("");
-                caducidad.setText("");
-                descripcion.setText(" ");
-
-                Toast tost = Toast.makeText(getContext(), "Producto Gurdado", Toast.LENGTH_LONG);
-                tost.show();
-            }
-        });
-
-
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-
-    public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
-        try {
-            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
-            archivo.write("\n" + nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion);
-            archivo.flush();
-            archivo.close();
-
-        } catch (IOException e) {
-        }
-
-
     }
 
 }
