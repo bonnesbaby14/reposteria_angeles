@@ -37,11 +37,12 @@ public class ProductoFragment extends Fragment {
     EditText cantidad;
     EditText precio;
     EditText descripcion;
-    ImageButton agregar,editar;
+    ImageButton agregar, editar, eliminar;
 
     Spinner spinner;
     ArrayList<String> productos;
     String puntero;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         productos = new ArrayList<String>();
@@ -58,9 +59,10 @@ public class ProductoFragment extends Fragment {
                 new ViewModelProvider(this).get(ProductoViewModel.class);
 
 
-
         agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
-        editar=(ImageButton) root.findViewById(R.id.btnEditarProducto);
+        editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
+        eliminar=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
+
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,20 +70,20 @@ public class ProductoFragment extends Fragment {
                     InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
-                    String todo="";
+                    String todo = "";
                     while (linea != null) {
-                        if(linea.equals(puntero)){
-                            String[] aux=linea.split("/");
-                            aux[0]=nombre.getText().toString();
-                            aux[1]=cantidad.getText().toString();
-                            aux[2]=precio.getText().toString();
-                            aux[3]=caducidad.getText().toString();
-                            aux[4]=descripcion.getText().toString();
-                            String resultado=aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4]+"\n";
-                            todo=todo+resultado;
+                        if (linea.equals(puntero)) {
+                            String[] aux = linea.split("/");
+                            aux[0] = nombre.getText().toString();
+                            aux[1] = cantidad.getText().toString();
+                            aux[2] = precio.getText().toString();
+                            aux[3] = caducidad.getText().toString();
+                            aux[4] = descripcion.getText().toString();
+                            String resultado = aux[0] + "/" + aux[1] + "/" + aux[2] + "/" + aux[3] + "/" + aux[4] + "\n";
+                            todo = todo + resultado;
 
-                        }else{
-                            todo=todo+linea+"\n";
+                        } else {
+                            todo = todo + linea + "\n";
                         }
 
 
@@ -96,7 +98,7 @@ public class ProductoFragment extends Fragment {
                     archivo2.flush();
                     archivo2.close();
 
-                    Toast.makeText(getContext(), "Producto editado",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Producto editado", Toast.LENGTH_LONG).show();
 
                     nombre.setText("");
                     caducidad.setText("");
@@ -105,7 +107,7 @@ public class ProductoFragment extends Fragment {
                     caducidad.setText("");
                     descripcion.setText(" ");
                     recargarProductos();
-                }catch(IOException e){
+                } catch (IOException e) {
 
                 }
 
@@ -116,8 +118,6 @@ public class ProductoFragment extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
 
 
                 grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
@@ -135,6 +135,48 @@ public class ProductoFragment extends Fragment {
             }
         });
 
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+                    String todo = "";
+                    while (linea != null) {
+                        if (linea.equals(puntero)) {
+
+                        } else {
+                            todo = todo + linea + "\n";
+                        }
+
+
+                        linea = br.readLine();
+                    }
+
+                    br.close();
+                    archivo.close();
+
+                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_PRIVATE));
+                    archivo2.write(todo);
+                    archivo2.flush();
+                    archivo2.close();
+
+                    Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_LONG).show();
+
+                    nombre.setText("");
+                    caducidad.setText("");
+                    cantidad.setText("");
+                    precio.setText("");
+                    caducidad.setText("");
+                    descripcion.setText(" ");
+                    recargarProductos();
+                } catch (IOException e) {
+
+                }
+            }
+        });
+
         recargarProductos();
         return root;
     }
@@ -149,7 +191,7 @@ public class ProductoFragment extends Fragment {
     public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
-            archivo.write( nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion+"\n" );
+            archivo.write(nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion + "\n");
             archivo.flush();
             archivo.close();
 
@@ -158,7 +200,8 @@ public class ProductoFragment extends Fragment {
 
 
     }
-    public void recargarProductos(){
+
+    public void recargarProductos() {
         try {
             InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
             if (archivo == null) {
@@ -187,8 +230,8 @@ public class ProductoFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String[] producto = parent.getItemAtPosition(position).toString().split("/");
-                        if(producto.length>1) {
-                            puntero=parent.getItemAtPosition(position).toString();
+                        if (producto.length > 1) {
+                            puntero = parent.getItemAtPosition(position).toString();
 
                             nombre.setText(producto[0].toString());
                             cantidad.setText(producto[1].toString());

@@ -217,7 +217,7 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/btnEliminarCliente"
+                android:id="@+id/btnEliminarProducto"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="28dp"
