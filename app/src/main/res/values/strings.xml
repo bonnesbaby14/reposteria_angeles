@@ -4,6 +4,8 @@
     <string name="correo">Correo electrónico</string>
     <string name="contraseña">Contraseña</string>
     <string name="ventas">VENTAS</string>
+    <string name="registro">REGISTRO</string>
+    <string name="registrar">Registrar</string>
     <string name="gastos">GASTOS</string>
     <string name="cliente">CLIENTES</string>
     <string name="encontras_venta">Encontrar venta</string>

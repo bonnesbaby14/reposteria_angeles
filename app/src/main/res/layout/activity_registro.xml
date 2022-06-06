@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".RegistroActivity">
+
 
     <TextView
         android:id="@+id/txtTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="serif"
-        android:text="@string/iniciar"
+        android:text="@string/registro"
         android:textColor="#040404"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,8 +25,9 @@
         android:id="@+id/imgLogo"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/txtTitulo"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="@+id/txtTitulo"
         app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
         app:srcCompat="@mipmap/logo" />
@@ -49,10 +50,26 @@
         app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
 
     <EditText
+        android:id="@+id/txtNombreRegistro"
+        android:layout_width="316dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/nombre"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        app:layout_constraintEnd_toEndOf="@+id/imgLogo"
+        app:layout_constraintStart_toStartOf="@+id/imgLogo"
+        app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
+
+    <EditText
         android:id="@+id/txtContrasenia"
         android:layout_width="316dp"
         android:layout_height="53dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/edit_text"
         android:ems="10"
         android:hint="@string/contraseña"
@@ -62,49 +79,21 @@
         android:textColorHint="#80000000"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/txtCorreo"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/txtCorreo"
-        app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNombreRegistro" />
 
     <Button
         android:id="@+id/btnIniciar"
         android:layout_width="316dp"
         android:layout_height="50dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/borde"
-        android:onClick="iniciarSesion"
-        android:text="@string/iniciar"
+        android:text="@string/registrar"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/txtContrasenia"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtContrasenia"
         app:layout_constraintTop_toBottomOf="@+id/txtContrasenia" />
-
-    <TextView
-        android:id="@+id/txtNota"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="¿No tienes una cuenta?"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnIniciar"
-        app:layout_constraintHorizontal_bias="0.231"
-        app:layout_constraintStart_toStartOf="@+id/btnIniciar"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciar" />
-
-    <TextView
-        android:id="@+id/txtRegistrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="registrar"
-        android:text="Regístrate."
-        android:textColor="#56068F"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnIniciar"
-        app:layout_constraintHorizontal_bias="0.861"
-        app:layout_constraintStart_toStartOf="@+id/btnIniciar"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

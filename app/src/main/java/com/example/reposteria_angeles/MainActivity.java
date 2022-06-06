@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import java.io.OutputStreamWriter;
 public class MainActivity extends AppCompatActivity {
     EditText usuario;
     EditText contra;
+    TextView registrar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
         return "null";
     }
 
+    public void registrar(View view){
+        registrar = findViewById(R.id.txtRegistrar);
+        Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
+        startActivity(intent);
+
+    }
+
     public void iniciarSesion(View view){
 
 
@@ -88,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+        //startActivity(intent);
 
         switch (login(usuario.getText().toString(),contra.getText().toString())){
 
