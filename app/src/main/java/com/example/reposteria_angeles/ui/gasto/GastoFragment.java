@@ -77,6 +77,51 @@ public class GastoFragment extends Fragment {
                 Toast.makeText(getContext(), "Gasto guardado", Toast.LENGTH_LONG).show();
             }//onClick
         });//agregar
+
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+                    String todo = "";
+                    while(linea!= null){
+                        if(linea.equals(puntero)){
+                            String[] aux = linea.split("/");
+                            aux[0] = buscarProducto.getSelectedItem().toString();
+                            aux[1] = nombre.getText().toString();
+                            aux[2] = costo.getText().toString();
+                            aux[3] = numProduct.getText().toString();
+                            aux[4] = description.getText().toString();
+                            String resultado = aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4] +"\n";
+                            todo += resultado;
+                        }else{
+                            todo = todo + linea +"\n";
+
+                        }//else
+                        linea = br.readLine();
+                    }//while
+                    br.close();
+                    archivo.close();
+
+                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("gastos.txt",MainActivity.MODE_PRIVATE));
+                    archivo2.write(todo);
+                    archivo2.flush();
+                    archivo2.close();
+                    Toast.makeText(getContext(), "Gasto editado", Toast.LENGTH_LONG).show();
+                    //Limpieza
+                    buscarProducto.setSelection(0);
+                    nombre.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
+                    recargarGastos();
+                }catch (IOException ex){
+
+                }//catch
+            }//onClick
+        });//editar
        // final TextView textView = binding.textSlideshow;
         //gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         recargarGastos();
