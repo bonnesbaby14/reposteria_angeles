@@ -61,9 +61,25 @@ public class GastoFragment extends Fragment {
         agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
         editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
         eliminar = (ImageButton) root.findViewById(R.id.btnEliminarProducto);
-
+        //Acciones botones
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                grabar(buscarProducto.getSelectedItem().toString(),nombre.getText().toString(),
+                        costo.getText().toString(),numProduct.getText().toString(),description.getText().toString());
+                //Limpieza
+                buscarProducto.setSelection(0);
+                nombre.setText("");
+                costo.setText("");
+                numProduct.setText("");
+                description.setText("");
+                recargarGastos();
+                Toast.makeText(getContext(), "Gasto guardado", Toast.LENGTH_LONG).show();
+            }//onClick
+        });//agregar
        // final TextView textView = binding.textSlideshow;
         //gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        recargarGastos();
         return root;
     }
 
@@ -131,7 +147,10 @@ public class GastoFragment extends Fragment {
                 arrayList.add("Selecciona...");
                 while (linea!=null){
                     String[] split = linea.split("/");
-                    arrayList.add(split[0]);
+                    if(file=="gastos.txt")
+                        arrayList.add(linea);
+                    else
+                        arrayList.add(split[0]);
                     linea = br.readLine();
                 }//while
                 br.close();
