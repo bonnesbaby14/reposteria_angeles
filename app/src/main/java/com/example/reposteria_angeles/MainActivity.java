@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public void grabar() {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_PRIVATE));
-            archivo.write("admin/admin/admin/admin");
+            archivo.write("admin/admin/admin/admin \n");
             archivo.flush();
             archivo.close();
         } catch (IOException e) {

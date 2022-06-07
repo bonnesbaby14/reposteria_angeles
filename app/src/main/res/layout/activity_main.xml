@@ -67,7 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
 
     <Button
-        android:id="@+id/btnIniciar"
+        android:id="@+id/btnregistrar"
         android:layout_width="316dp"
         android:layout_height="50dp"
         android:layout_marginTop="44dp"
@@ -88,10 +88,10 @@
         android:text="¿No tienes una cuenta?"
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnIniciar"
+        app:layout_constraintEnd_toEndOf="@+id/btnregistrar"
         app:layout_constraintHorizontal_bias="0.231"
-        app:layout_constraintStart_toStartOf="@+id/btnIniciar"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciar" />
+        app:layout_constraintStart_toStartOf="@+id/btnregistrar"
+        app:layout_constraintTop_toBottomOf="@+id/btnregistrar" />
 
     <TextView
         android:id="@+id/txtRegistrar"
@@ -102,9 +102,9 @@
         android:text="Regístrate."
         android:textColor="#56068F"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnIniciar"
+        app:layout_constraintEnd_toEndOf="@+id/btnregistrar"
         app:layout_constraintHorizontal_bias="0.861"
-        app:layout_constraintStart_toStartOf="@+id/btnIniciar"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciar" />
+        app:layout_constraintStart_toStartOf="@+id/btnregistrar"
+        app:layout_constraintTop_toBottomOf="@+id/btnregistrar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
