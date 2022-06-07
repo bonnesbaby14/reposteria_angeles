@@ -1,11 +1,18 @@
 package com.example.reposteria_angeles;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ThemedSpinnerAdapter;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PackageManagerCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,8 +30,13 @@ public class MainActivity extends AppCompatActivity {
     EditText usuario;
     EditText contra;
     TextView registrar;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},200);
+
+
 
         try {
         InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
@@ -33,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             grabar();
         }
         } catch (IOException e) {
+            Toast.makeText(this,"No hay Archivo",Toast.LENGTH_SHORT).show();
+            grabar();
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -46,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
             archivo.flush();
             archivo.close();
         } catch (IOException e) {
+
+
+
         }
         Toast t = Toast.makeText(this, "APP INICIADA POR PRIMERA VEZ",Toast.LENGTH_SHORT);
         t.show();
