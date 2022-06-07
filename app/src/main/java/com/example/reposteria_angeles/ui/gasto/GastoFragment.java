@@ -122,6 +122,46 @@ public class GastoFragment extends Fragment {
                 }//catch
             }//onClick
         });//editar
+
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
+                    BufferedReader br  = new BufferedReader(archivo);
+                    String linea = br.readLine();
+                    String todo  = "";
+                    while (linea!=null){
+                        if(linea.equals(puntero)){
+
+                        }else{
+                            todo = todo + linea +"\n";
+                        }//else
+                        linea = br.readLine();
+
+                    }//while
+
+                    br.close();
+                    archivo.close();
+
+                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("gastos.txt",MainActivity.MODE_PRIVATE));
+                    archivo2.write(todo);
+                    archivo2.flush();
+                    archivo2.close();
+
+                    Toast.makeText(getContext(), "Gasto eliminado", Toast.LENGTH_LONG).show();
+                    //Limpieza
+                    buscarProducto.setSelection(0);
+                    nombre.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
+                    recargarGastos();
+                }catch (IOException ex){
+
+                }//catch
+            }//onClick
+        });//eliminar
        // final TextView textView = binding.textSlideshow;
         //gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         recargarGastos();
