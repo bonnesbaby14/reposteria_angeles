@@ -65,16 +65,24 @@ public class GastoFragment extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                grabar(buscarProducto.getSelectedItem().toString(),nombre.getText().toString(),
-                        costo.getText().toString(),numProduct.getText().toString(),description.getText().toString());
-                //Limpieza
-                buscarProducto.setSelection(0);
-                nombre.setText("");
-                costo.setText("");
-                numProduct.setText("");
-                description.setText("");
-                recargarGastos();
-                Toast.makeText(getContext(), "Gasto guardado", Toast.LENGTH_LONG).show();
+                if(buscarProducto.getSelectedItem()=="Selecciona..."||nombre.getText().toString().isEmpty()
+                        ||costo.getText().toString().isEmpty()||numProduct.getText().toString().isEmpty()||
+                        description.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Llena los campos.", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    grabar(buscarProducto.getSelectedItem().toString(), nombre.getText().toString(),
+                            costo.getText().toString(), numProduct.getText().toString(), description.getText().toString());
+                    //Limpieza
+                    buscarProducto.setSelection(0);
+                    nombre.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
+                    recargarGastos();
+                    Toast.makeText(getContext(), "Gasto guardado", Toast.LENGTH_LONG).show();
+                }
             }//onClick
         });//agregar
 
@@ -86,8 +94,10 @@ public class GastoFragment extends Fragment {
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo = "";
+                    boolean editado = false;
                     while(linea!= null){
                         if(linea.equals(puntero)){
+                            editado = true;
                             String[] aux = linea.split("/");
                             aux[0] = buscarProducto.getSelectedItem().toString();
                             aux[1] = nombre.getText().toString();
@@ -109,7 +119,10 @@ public class GastoFragment extends Fragment {
                     archivo2.write(todo);
                     archivo2.flush();
                     archivo2.close();
-                    Toast.makeText(getContext(), "Gasto editado", Toast.LENGTH_LONG).show();
+                    if(editado)
+                        Toast.makeText(getContext(), "Gasto editado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione un gasto.", Toast.LENGTH_LONG).show();
                     //Limpieza
                     buscarProducto.setSelection(0);
                     nombre.setText("");
@@ -131,9 +144,10 @@ public class GastoFragment extends Fragment {
                     BufferedReader br  = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo  = "";
+                    boolean eliminado = false;
                     while (linea!=null){
                         if(linea.equals(puntero)){
-
+                            eliminado = true;
                         }else{
                             todo = todo + linea +"\n";
                         }//else
@@ -148,8 +162,11 @@ public class GastoFragment extends Fragment {
                     archivo2.write(todo);
                     archivo2.flush();
                     archivo2.close();
+                    if(eliminado)
+                        Toast.makeText(getContext(), "Gasto eliminado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione un gasto.", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(getContext(), "Gasto eliminado", Toast.LENGTH_LONG).show();
                     //Limpieza
                     buscarProducto.setSelection(0);
                     nombre.setText("");
@@ -206,6 +223,14 @@ public class GastoFragment extends Fragment {
                            costo.setText(gasto[2]);
                            numProduct.setText(gasto[3]);
                            description.setText(gasto[4]);
+                       }
+                       if(buscarGasto.getSelectedItem().toString()=="Selecciona..."){
+                           buscarProducto.setSelection(0);
+                           nombre.setText("");
+                           costo.setText("");
+                           numProduct.setText("");
+                           description.setText("");
+                           puntero = "";
                        }
                    }//onItemSelected
 

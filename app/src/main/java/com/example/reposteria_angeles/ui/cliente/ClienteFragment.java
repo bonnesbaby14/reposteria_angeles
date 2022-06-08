@@ -64,6 +64,7 @@ public class ClienteFragment extends Fragment {
                         BufferedReader br = new BufferedReader(archivo);
                         String linea = br.readLine();
                         String todo = "";
+                        boolean editar = false;
                         while(linea!=null){
                             if(linea.equals(puntero)){
                                 String[] aux  =linea.split("/");
@@ -73,6 +74,7 @@ public class ClienteFragment extends Fragment {
                                 aux[3] = preferencia.getText().toString();
                                 String resultado = aux[0] + "/" + aux[1] + "/" + aux[2] + "/" + aux[3] + "\n";
                                 todo += resultado;
+                                editar  = true;
                             }else{
                                 //Si no es la linea seleccionada se mueve de renglon
                                 todo = todo + linea + "\n";
@@ -88,7 +90,11 @@ public class ClienteFragment extends Fragment {
                         archivo2.write(todo);
                         archivo2.flush();
                         archivo2.close();
-                        Toast.makeText(getContext(), "Cliente editado", Toast.LENGTH_LONG).show();
+                        if(editar)
+                            Toast.makeText(getContext(), "Cliente editado", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getContext(), "Seleccione un cliente.", Toast.LENGTH_LONG).show();
+
                         nombre.setText("");
                         direccion.setText("");
                         telefono.setText("");
@@ -107,13 +113,19 @@ public class ClienteFragment extends Fragment {
             agregar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    grabar(nombre.getText().toString(),direccion.getText().toString(),telefono.getText().toString(),preferencia.getText().toString());
-                    nombre.setText("");
-                    direccion.setText("");
-                    telefono.setText("");
-                    preferencia.setText("");
-                    recargarClientes();
-                    Toast.makeText(getContext(),"Cliente Guardado",Toast.LENGTH_LONG).show();
+                    if(nombre.getText().toString().isEmpty()||direccion.getText().toString().isEmpty()||
+                       telefono.getText().toString().isEmpty()||preferencia.getText().toString().isEmpty()){
+                        Toast.makeText(getContext(),"Llene los campos",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        grabar(nombre.getText().toString(), direccion.getText().toString(), telefono.getText().toString(), preferencia.getText().toString());
+                        nombre.setText("");
+                        direccion.setText("");
+                        telefono.setText("");
+                        preferencia.setText("");
+                        recargarClientes();
+                        Toast.makeText(getContext(), "Cliente Guardado", Toast.LENGTH_LONG).show();
+                    }
                 }//onClick
             });//agregar
 
@@ -126,9 +138,10 @@ public class ClienteFragment extends Fragment {
                         BufferedReader br = new BufferedReader(archivo);
                         String linea = br.readLine();
                         String todo = "";
+                        boolean eliminado = false;
                         while(linea!=null){
                             if(linea.equals(puntero)){
-
+                                eliminado = true;
                             }else{
                                 todo = todo + linea +"\n";
                             }
@@ -142,7 +155,11 @@ public class ClienteFragment extends Fragment {
                         archivo2.flush();
                         archivo2.close();
 
-                        Toast.makeText(getContext(),"Cliente eliminado",Toast.LENGTH_LONG).show();
+                        if(eliminado)
+                            Toast.makeText(getContext(),"Cliente eliminado",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getContext(),"Seleccione un cliente",Toast.LENGTH_LONG).show();
+
 
                         nombre.setText("");
                         direccion.setText("");
@@ -216,6 +233,13 @@ public class ClienteFragment extends Fragment {
                             telefono.setText(cliente[2].toString());
                             preferencia.setText(cliente[3].toString());
                         }//if
+                        if(buscarCliente.getSelectedItem().toString().equals("Selecciona...")){
+                            nombre.setText("");
+                            direccion.setText("");
+                            telefono.setText("");
+                            preferencia.setText("");
+                            puntero = "";
+                        }
                     }//onItemSelected
 
                     @Override

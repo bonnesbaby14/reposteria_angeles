@@ -78,17 +78,23 @@ public class IngresoFragment extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                grabar(buscarCliente.getSelectedItem().toString(),buscarProducto.getSelectedItem().toString(),
-                        ventaTotal.getText().toString(),nombreVenta.getText().toString(),
-                        productVendido.getText().toString(),descripcion.getText().toString());
-                buscarCliente.setSelection(0);
-                buscarProducto.setSelection(0);
-                ventaTotal.setText("");
-                nombreVenta.setText("");
-                productVendido.setText("");
-                descripcion.setText("");
-                recargarIngresos();
-                Toast.makeText(getContext(), "Ingreso guardado", Toast.LENGTH_LONG).show();
+                if(buscarCliente.getSelectedItem().toString().equals("Selecciona...")||buscarProducto.getSelectedItem().toString().equals("Selecciona...")||
+                   ventaTotal.getText().toString().isEmpty()||nombreVenta.getText().toString().isEmpty()||productVendido.getText().toString().isEmpty()||
+                    descripcion.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Llene todos los campos", Toast.LENGTH_LONG).show();
+                }else {
+                    grabar(buscarCliente.getSelectedItem().toString(), buscarProducto.getSelectedItem().toString(),
+                            ventaTotal.getText().toString(), nombreVenta.getText().toString(),
+                            productVendido.getText().toString(), descripcion.getText().toString());
+                    buscarCliente.setSelection(0);
+                    buscarProducto.setSelection(0);
+                    ventaTotal.setText("");
+                    nombreVenta.setText("");
+                    productVendido.setText("");
+                    descripcion.setText("");
+                    recargarIngresos();
+                    Toast.makeText(getContext(), "Ingreso guardado", Toast.LENGTH_LONG).show();
+                }
             }//onClick
         });//agregar
 
@@ -100,6 +106,7 @@ public class IngresoFragment extends Fragment {
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo = "";
+                    boolean editar = false;
                     while(linea!=null){
                         if(linea.equals(puntero)){
                             String[] aux = linea.split("/");
@@ -112,6 +119,7 @@ public class IngresoFragment extends Fragment {
                             String resultado = aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4]
                                     +"/"+aux[5]+"\n";
                             todo+=resultado;
+                            editar = true;
                         }else{
                             todo = todo + linea +"\n";
                         }
@@ -124,7 +132,10 @@ public class IngresoFragment extends Fragment {
                     archivo2.write(todo);
                     archivo2.flush();
                     archivo2.close();
-                    Toast.makeText(getContext(), "Ingreso editado", Toast.LENGTH_LONG).show();
+                    if(editar)
+                        Toast.makeText(getContext(), "Ingreso editado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione venta", Toast.LENGTH_LONG).show();
                     //Limpieza de componentes
                     buscarCliente.setSelection(0);
                     buscarProducto.setSelection(0);
@@ -148,9 +159,10 @@ public class IngresoFragment extends Fragment {
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo = "";
+                    boolean eliminado = false;
                     while(linea!=null){
                         if(linea.equals(puntero)){
-
+                            eliminado = true;
                         }else{
                             todo = todo + linea +"\n";
                         }//else{
@@ -165,7 +177,11 @@ public class IngresoFragment extends Fragment {
                     archivo2.flush();
                     archivo2.close();
 
-                    Toast.makeText(getContext(), "Ingreso eliminado", Toast.LENGTH_LONG).show();
+                    if(eliminado)
+                        Toast.makeText(getContext(), "Ingreso eliminado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione venta", Toast.LENGTH_LONG).show();
+
                     //Limpieza de componentes
                     buscarCliente.setSelection(0);
                     buscarProducto.setSelection(0);
@@ -246,6 +262,15 @@ public class IngresoFragment extends Fragment {
                             descripcion.setText(ingreso[5]);
 
                         }//if
+                        if(buscarVenta.getSelectedItem().toString().equals("Selecciona...")){
+                            buscarCliente.setSelection(0);
+                            buscarProducto.setSelection(0);
+                            ventaTotal.setText("");
+                            nombreVenta.setText("");
+                            productVendido.setText("");
+                            descripcion.setText("");
+                            puntero = "";
+                        }
                     }//onItemSelected
 
                     @Override

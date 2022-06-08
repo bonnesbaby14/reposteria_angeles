@@ -71,6 +71,7 @@ public class ProductoFragment extends Fragment {
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo = "";
+                    boolean editado = false;
                     while (linea != null) {
                         if (linea.equals(puntero)) {
                             String[] aux = linea.split("/");
@@ -81,6 +82,7 @@ public class ProductoFragment extends Fragment {
                             aux[4] = descripcion.getText().toString();
                             String resultado = aux[0] + "/" + aux[1] + "/" + aux[2] + "/" + aux[3] + "/" + aux[4] + "\n";
                             todo = todo + resultado;
+                            editado = true;
 
                         } else {
                             todo = todo + linea + "\n";
@@ -97,8 +99,10 @@ public class ProductoFragment extends Fragment {
                     archivo2.write(todo);
                     archivo2.flush();
                     archivo2.close();
-
-                    Toast.makeText(getContext(), "Producto editado", Toast.LENGTH_LONG).show();
+                    if(editado)
+                        Toast.makeText(getContext(), "Producto editado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione producto", Toast.LENGTH_LONG).show();
 
                     nombre.setText("");
                     caducidad.setText("");
@@ -118,20 +122,25 @@ public class ProductoFragment extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(nombre.getText().toString().isEmpty()||cantidad.getText().toString().isEmpty()||
+                        precio.getText().toString().isEmpty()||cantidad.getText().toString().isEmpty()||
+                        descripcion.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Llene los campos", Toast.LENGTH_LONG).show();
 
+                }else {
 
-                grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
+                    grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
 
-                nombre.setText("");
-                caducidad.setText("");
-                cantidad.setText("");
-                precio.setText("");
-                caducidad.setText("");
-                descripcion.setText(" ");
-                recargarProductos();
-                Toast tost = Toast.makeText(getContext(), "Producto Gurdado", Toast.LENGTH_LONG);
-                tost.show();
-
+                    nombre.setText("");
+                    caducidad.setText("");
+                    cantidad.setText("");
+                    precio.setText("");
+                    caducidad.setText("");
+                    descripcion.setText(" ");
+                    recargarProductos();
+                    Toast tost = Toast.makeText(getContext(), "Producto Guardado", Toast.LENGTH_LONG);
+                    tost.show();
+                }
             }
         });
 
@@ -143,9 +152,10 @@ public class ProductoFragment extends Fragment {
                     BufferedReader br = new BufferedReader(archivo);
                     String linea = br.readLine();
                     String todo = "";
+                    boolean eliminado = false;
                     while (linea != null) {
                         if (linea.equals(puntero)) {
-
+                            eliminado  = true;
                         } else {
                             todo = todo + linea + "\n";
                         }
@@ -161,8 +171,11 @@ public class ProductoFragment extends Fragment {
                     archivo2.write(todo);
                     archivo2.flush();
                     archivo2.close();
+                    if(eliminado)
+                        Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Seleccione producto", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_LONG).show();
 
                     nombre.setText("");
                     caducidad.setText("");
@@ -213,7 +226,7 @@ public class ProductoFragment extends Fragment {
                 String linea = br.readLine();
                 String todo = "";
                 productos.clear();
-                productos.add("Seleciona...");
+                productos.add("Selecciona...");
                 while (linea != null) {
                     String[] split = linea.split("/");
                     Log.d("DATA", split.toString());
@@ -238,6 +251,15 @@ public class ProductoFragment extends Fragment {
                             precio.setText(producto[2].toString());
                             caducidad.setText(producto[3].toString());
                             descripcion.setText(producto[4].toString());
+                        }
+                        if(spinner.getSelectedItem().toString()=="Selecciona..."){
+                            nombre.setText("");
+                            caducidad.setText("");
+                            cantidad.setText("");
+                            precio.setText("");
+                            caducidad.setText("");
+                            descripcion.setText(" ");
+                            puntero = "";
                         }
 
                     }
