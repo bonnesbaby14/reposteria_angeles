@@ -21,7 +21,15 @@
         <item
             android:id="@+id/nav_cliente"
             android:icon="@drawable/ic_baseline_emoji_people_24"
-            android:title="Clientes" />
+            android:title="@string/clientes" />
+        <item
+            android:id="@+id/nav_reportes"
+            android:icon="@drawable/ic_baseline_find_in_page_24"
+            android:title="@string/reportes" />
+        <item
+            android:id="@+id/nav_estadisticas"
+            android:icon="@drawable/ic_baseline_bar_chart_24"
+            android:title="Estadísticas" />
         <item
             android:id="@+id/nav_salir"
             android:icon="@drawable/ic_baseline_login_24"

@@ -7,6 +7,7 @@
     <string name="registro">REGISTRO</string>
     <string name="registrar">Registrar</string>
     <string name="gastos">GASTOS</string>
+    <string name="reporte">REPORTES</string>
     <string name="cliente">CLIENTES</string>
     <string name="encontras_venta">Encontrar venta</string>
     <string name="producto_title">PRODUCTOS</string>
@@ -19,6 +20,8 @@
     <string name="cantidad">Cantidad</string>
     <string name="precio">Precio</string>
     <string name="fecha">Fecha de caducidad</string>
+    <string name="fecha_inicio">Fecha inicio</string>
+    <string name="fecha_final">Fecha final</string>
     <string name="descripcion">Descripción</string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -33,6 +36,8 @@
     <string name="menu_slideshow">Gastos</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reportes">Reportes</string>
+    <string name="clientes">Clientes</string>
 
 
 </resources>

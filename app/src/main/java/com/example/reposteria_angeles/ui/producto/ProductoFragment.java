@@ -1,5 +1,6 @@
 package com.example.reposteria_angeles.ui.producto;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ProductoFragment extends Fragment {
 
@@ -38,6 +41,7 @@ public class ProductoFragment extends Fragment {
     EditText precio;
     EditText descripcion;
     ImageButton agregar, editar, eliminar;
+    private int dia, mes, anio;
 
     Spinner spinner;
     ArrayList<String> productos;
@@ -62,6 +66,24 @@ public class ProductoFragment extends Fragment {
         agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
         editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
         eliminar=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
+
+        caducidad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                dia = c.get(Calendar.DAY_OF_MONTH);
+                mes = c.get(Calendar.MONTH);
+                anio = c.get(Calendar.YEAR);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        caducidad.setText(i2+"/"+(i1+1)+"/"+i);
+                    }
+                },anio,mes,dia);
+                datePickerDialog.show();
+            }
+        });
 
         editar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/txtTitulo3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:fontFamily="serif"
+        android:text="REPORTE TOTAL"
+        android:textColor="#040404"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtFinalReporte"
+        app:layout_constraintTop_toBottomOf="@+id/txtFinalReporte" />
+
+    <TextView
+        android:id="@+id/txtTitulo4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="serif"
+        android:text="TICKETS"
+        android:textColor="#040404"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnIngresosReporte"
+        app:layout_constraintTop_toBottomOf="@+id/btnIngresosReporte" />
+
+    <EditText
+        android:id="@+id/txtFinalReporte"
+        android:layout_width="306dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text"
+        android:drawableLeft="@drawable/ic_baseline_date_range_24"
+        android:ems="10"
+        android:enabled="true"
+        android:hint="@string/fecha_final"
+        android:inputType="date"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorHint="#81000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInicioReporte" />
+
+    <TextView
+        android:id="@+id/txtTitulo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="serif"
+        android:text="@string/reporte"
+        android:textColor="#040404"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTitulo2"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo2"
+        app:srcCompat="@drawable/ic_baseline_find_in_page_24" />
+
+    <EditText
+        android:id="@+id/txtInicioReporte"
+        android:layout_width="306dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text"
+        android:drawableLeft="@drawable/ic_baseline_date_range_24"
+        android:ems="10"
+        android:enabled="true"
+        android:hint="@string/fecha_inicio"
+        android:inputType="date"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorHint="#81000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <Button
+        android:id="@+id/btnIngresosReporte"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Ingresos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtTitulo3"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo3" />
+
+    <Button
+        android:id="@+id/btnReporteReporte"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Reporte"
+        app:layout_constraintStart_toStartOf="@+id/txtTitulo4"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo4" />
+
+    <Button
+        android:id="@+id/btnEstadisticaReporte"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Estadísticas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.365"
+        app:layout_constraintStart_toEndOf="@+id/btnReporteReporte"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo4" />
+</androidx.constraintlayout.widget.ConstraintLayout>

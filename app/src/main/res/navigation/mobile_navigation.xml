@@ -29,5 +29,12 @@
         android:label="Cliente"
         tools:layout="@layout/fragment_cliente" />
 
+    <fragment
+        android:id="@+id/nav_reportes"
+        android:name="com.example.reposteria_angeles.ui.reporte.ReporteFragment"
+        android:label="Reportes"
+        tools:layout="@layout/fragment_reporte" />
+
+
 
 </navigation>
