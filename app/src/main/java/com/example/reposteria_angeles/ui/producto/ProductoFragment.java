@@ -78,7 +78,7 @@ public class ProductoFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        caducidad.setText(i2+"/"+(i1+1)+"/"+i);
+                        caducidad.setText(i2+"-"+(i1+1)+"-"+i);
                     }
                 },anio,mes,dia);
                 datePickerDialog.show();
@@ -96,13 +96,13 @@ public class ProductoFragment extends Fragment {
                     boolean editado = false;
                     while (linea != null) {
                         if (linea.equals(puntero)) {
-                            String[] aux = linea.split("/");
+                            String[] aux = linea.split("-");
                             aux[0] = nombre.getText().toString();
                             aux[1] = cantidad.getText().toString();
                             aux[2] = precio.getText().toString();
                             aux[3] = caducidad.getText().toString();
                             aux[4] = descripcion.getText().toString();
-                            String resultado = aux[0] + "/" + aux[1] + "/" + aux[2] + "/" + aux[3] + "/" + aux[4] + "\n";
+                            String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "-" + aux[4] + "\n";
                             todo = todo + resultado;
                             editado = true;
 
@@ -226,7 +226,7 @@ public class ProductoFragment extends Fragment {
     public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
-            archivo.write(nombre + "/" + cantidad + "/" + precio + "/" + fecha + "/" + descipcion + "\n");
+            archivo.write(nombre + "-" + cantidad + "-" + precio + "-" + fecha + "-" + descipcion + "\n");
             archivo.flush();
             archivo.close();
 
@@ -241,7 +241,7 @@ public class ProductoFragment extends Fragment {
             InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
             if (archivo == null) {
 
-                grabar("producto", "100", "10", "00-00-0000", "productoDescripcion");
+                grabar("producto", "100", "10", "00/00/0000", "productoDescripcion");
             } else {
 
                 BufferedReader br = new BufferedReader(archivo);
@@ -250,7 +250,7 @@ public class ProductoFragment extends Fragment {
                 productos.clear();
                 productos.add("Selecciona...");
                 while (linea != null) {
-                    String[] split = linea.split("/");
+                    String[] split = linea.split("-");
                     Log.d("DATA", split.toString());
                     productos.add(linea);
                     linea = br.readLine();
@@ -264,7 +264,7 @@ public class ProductoFragment extends Fragment {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] producto = parent.getItemAtPosition(position).toString().split("/");
+                        String[] producto = parent.getItemAtPosition(position).toString().split("-");
                         if (producto.length > 1) {
                             puntero = parent.getItemAtPosition(position).toString();
 
@@ -295,7 +295,7 @@ public class ProductoFragment extends Fragment {
         } catch (IOException e) {
             Log.d("archivo", e.toString());
 
-            grabar("producto", "100", "10", "00-00-0000", "productoDescripcion");
+            grabar("producto", "100", "10", "00/00/0000", "productoDescripcion");
             Toast tost = Toast.makeText(getContext(), "Se creo el archivo productos", Toast.LENGTH_SHORT);
             tost.show();
             recargarProductos();

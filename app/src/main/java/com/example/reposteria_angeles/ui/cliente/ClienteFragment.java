@@ -67,12 +67,12 @@ public class ClienteFragment extends Fragment {
                         boolean editar = false;
                         while(linea!=null){
                             if(linea.equals(puntero)){
-                                String[] aux  =linea.split("/");
+                                String[] aux  =linea.split("-");
                                 aux[0] = nombre.getText().toString();
                                 aux[1] = direccion.getText().toString();
                                 aux[2] = telefono.getText().toString();
                                 aux[3] = preferencia.getText().toString();
-                                String resultado = aux[0] + "/" + aux[1] + "/" + aux[2] + "/" + aux[3] + "\n";
+                                String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "\n";
                                 todo += resultado;
                                 editar  = true;
                             }else{
@@ -188,7 +188,7 @@ public class ClienteFragment extends Fragment {
     public void grabar(String nombre, String direccion, String telefono, String preferencia){
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("clientes.txt",MainActivity.MODE_APPEND));
-            archivo.write(nombre+"/"+direccion+"/"+telefono+"/"+preferencia+"\n");
+            archivo.write(nombre+"-"+direccion+"-"+telefono+"-"+preferencia+"\n");
             archivo.flush();
             archivo.close();
 
@@ -209,7 +209,7 @@ public class ClienteFragment extends Fragment {
                 clientes.clear();
                 clientes.add("Selecciona...");
                 while(linea!=null){
-                    String[] split = linea.split("/");
+                    String[] split = linea.split("-");
                     Log.d("DATA",split.toString());
                     clientes.add(linea);
                     linea = br.readLine();
@@ -224,7 +224,7 @@ public class ClienteFragment extends Fragment {
                 buscarCliente.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] cliente = parent.getItemAtPosition(position).toString().split("/");
+                        String[] cliente = parent.getItemAtPosition(position).toString().split("-");
                         if(cliente.length>1){
                             puntero = parent.getItemAtPosition(position).toString();
 

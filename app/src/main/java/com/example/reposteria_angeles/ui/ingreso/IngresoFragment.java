@@ -109,15 +109,15 @@ public class IngresoFragment extends Fragment {
                     boolean editar = false;
                     while(linea!=null){
                         if(linea.equals(puntero)){
-                            String[] aux = linea.split("/");
+                            String[] aux = linea.split("-");
                             aux[0] = buscarCliente.getSelectedItem().toString();
                             aux[1] = buscarProducto.getSelectedItem().toString();
                             aux[2] = ventaTotal.getText().toString();
                             aux[3] = nombreVenta.getText().toString();
                             aux[4] = productVendido.getText().toString();
                             aux[5] = descripcion.getText().toString();
-                            String resultado = aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4]
-                                    +"/"+aux[5]+"\n";
+                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4]
+                                    +"-"+aux[5]+"\n";
                             todo+=resultado;
                             editar = true;
                         }else{
@@ -212,7 +212,7 @@ public class IngresoFragment extends Fragment {
                        String nombreVenta, String productVendido, String descripcion){
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("ingresos.txt", MainActivity.MODE_APPEND));
-            archivo.write(cliente+"/"+producto+"/"+ventaTotal+"/"+nombreVenta+"/"+productVendido+"/"+descripcion+"\n");
+            archivo.write(cliente+"-"+producto+"-"+ventaTotal+"-"+nombreVenta+"-"+productVendido+"-"+descripcion+"\n");
             archivo.flush();
             archivo.close();
         }catch (IOException ex){
@@ -233,7 +233,7 @@ public class IngresoFragment extends Fragment {
                 ventas.clear();
                 ventas.add("Selecciona...");
                 while(linea!=null){
-                    String[] split = linea.split("/");
+                    String[] split = linea.split("-");
                     Log.d("DATA",split.toString());
                     ventas.add(linea);
                     linea = br.readLine();
@@ -247,7 +247,7 @@ public class IngresoFragment extends Fragment {
                 buscarVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] ingreso = parent.getItemAtPosition(position).toString().split("/");
+                        String[] ingreso = parent.getItemAtPosition(position).toString().split("-");
                         if(ingreso.length>1){
                             puntero = parent.getItemAtPosition(position).toString();
                             //Cliente
@@ -294,7 +294,7 @@ public class IngresoFragment extends Fragment {
                 arrayList.clear();
                 arrayList.add("Selecciona...");
                 while (linea!=null){
-                    String[] split = linea.split("/");
+                    String[] split = linea.split("-");
                     arrayList.add(split[0]);
                     linea = br.readLine();
                 }//while

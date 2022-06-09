@@ -98,13 +98,13 @@ public class GastoFragment extends Fragment {
                     while(linea!= null){
                         if(linea.equals(puntero)){
                             editado = true;
-                            String[] aux = linea.split("/");
+                            String[] aux = linea.split("-");
                             aux[0] = buscarProducto.getSelectedItem().toString();
                             aux[1] = nombre.getText().toString();
                             aux[2] = costo.getText().toString();
                             aux[3] = numProduct.getText().toString();
                             aux[4] = description.getText().toString();
-                            String resultado = aux[0]+"/"+aux[1]+"/"+aux[2]+"/"+aux[3]+"/"+aux[4] +"\n";
+                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4] +"\n";
                             todo += resultado;
                         }else{
                             todo = todo + linea +"\n";
@@ -195,7 +195,7 @@ public class GastoFragment extends Fragment {
     public void grabar(String producto, String nombre, String costo, String numProduct, String description ){
         try{
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("gastos.txt", MainActivity.MODE_APPEND));
-            archivo.write(producto+"/"+nombre+"/"+costo+"/"+numProduct+"/"+description+"\n");
+            archivo.write(producto+"-"+nombre+"-"+costo+"-"+numProduct+"-"+description+"\n");
             archivo.flush();
             archivo.close();
         }catch (IOException ex){
@@ -213,7 +213,7 @@ public class GastoFragment extends Fragment {
                buscarGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                    @Override
                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                       String[] gasto = parent.getItemAtPosition(position).toString().split("/");
+                       String[] gasto = parent.getItemAtPosition(position).toString().split("-");
                        if(gasto.length>1){
                            puntero = parent.getItemAtPosition(position).toString();
                            //Producto
@@ -256,7 +256,7 @@ public class GastoFragment extends Fragment {
                 arrayList.clear();
                 arrayList.add("Selecciona...");
                 while (linea!=null){
-                    String[] split = linea.split("/");
+                    String[] split = linea.split("-");
                     if(file=="gastos.txt")
                         arrayList.add(linea);
                     else

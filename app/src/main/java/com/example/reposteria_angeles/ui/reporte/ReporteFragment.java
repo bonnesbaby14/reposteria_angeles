@@ -56,7 +56,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                    txtInicio.setText(i2+"/"+(i1+1)+"/"+i);
+                    txtInicio.setText(i2+"-"+(i1+1)+"-"+i);
                 }
             },anio,mes,dia);
             datePickerDialog.show();
@@ -70,7 +70,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                    txtFinal.setText(i2+"/"+(i1+1)+"/"+i);
+                    txtFinal.setText(i2+"-"+(i1+1)+"-"+i);
                 }
             },anio,mes,dia);
             datePickerDialog.show();

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public void grabar() {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_PRIVATE));
-            archivo.write("admin/admin/admin/admin \n");
+            archivo.write("admin-admin-admin-admin \n");
             archivo.flush();
             archivo.close();
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             String linea = br.readLine();
             String todo = "";
             while (linea != null) {
-                String [] split=linea.split("/");
+                String [] split=linea.split("-");
                 Log.d("DATA",split.toString());
                 if(split[0].equals(usuario)){
                     if(split[1].equals(contra)){

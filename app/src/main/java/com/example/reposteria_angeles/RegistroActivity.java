@@ -47,7 +47,7 @@ public class RegistroActivity extends AppCompatActivity {
                     String linea = br.readLine();
                     String todo = "";
                     while (linea != null) {
-                        String [] split=linea.split("/");
+                        String [] split=linea.split("-");
                         Log.d("DATA",split.toString());
                         if(split[0].equals(user)){
                             Toast.makeText(getApplicationContext(),"El usurio ya existe",Toast.LENGTH_LONG).show();
@@ -59,7 +59,7 @@ public class RegistroActivity extends AppCompatActivity {
                     archivo.close();
 
                     OutputStreamWriter archivo2 = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_APPEND));
-                    archivo2.write(""+user+"/"+contrasena+"/"+nombr+"/admin \n");
+                    archivo2.write(""+user+"-"+contrasena+"-"+nombr+"/admin \n");
                     archivo2.flush();
                     archivo2.close();
 
