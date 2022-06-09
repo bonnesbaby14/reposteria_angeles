@@ -100,7 +100,7 @@ public class ProductoFragment extends Fragment {
                             aux[0] = nombre.getText().toString();
                             aux[1] = cantidad.getText().toString();
                             aux[2] = precio.getText().toString();
-                            aux[3] = caducidad.getText().toString();
+                            aux[3] = caducidad.getText().toString().replace("/","-");
                             aux[4] = descripcion.getText().toString();
                             String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "-" + aux[4] + "\n";
                             todo = todo + resultado;
@@ -145,13 +145,14 @@ public class ProductoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(nombre.getText().toString().isEmpty()||cantidad.getText().toString().isEmpty()||
-                        precio.getText().toString().isEmpty()||cantidad.getText().toString().isEmpty()||
+                        precio.getText().toString().isEmpty()||caducidad.getText().toString().isEmpty()||
                         descripcion.getText().toString().isEmpty()){
                     Toast.makeText(getContext(), "Llene los campos", Toast.LENGTH_LONG).show();
 
                 }else {
+                    String caduc = caducidad.getText().toString().replace("/","-");
 
-                    grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caducidad.getText().toString(), descripcion.getText().toString());
+                    grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caduc, descripcion.getText().toString());
 
                     nombre.setText("");
                     caducidad.setText("");
@@ -271,7 +272,7 @@ public class ProductoFragment extends Fragment {
                             nombre.setText(producto[0].toString());
                             cantidad.setText(producto[1].toString());
                             precio.setText(producto[2].toString());
-                            caducidad.setText(producto[3].toString());
+                            caducidad.setText(producto[3].toString().replace("-","/"));
                             descripcion.setText(producto[4].toString());
                         }
                         if(spinner.getSelectedItem().toString()=="Selecciona..."){
