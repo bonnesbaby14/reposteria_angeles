@@ -1,7 +1,15 @@
 package com.example.reposteria_angeles.ui.producto;
 
 import android.app.DatePickerDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,11 +35,16 @@ import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 import com.example.reposteria_angeles.R;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ProductoFragment extends Fragment {
 
@@ -66,7 +80,11 @@ public class ProductoFragment extends Fragment {
         agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
         editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
         eliminar=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
-
+        try {
+            generarTicket("10/03/1999","10/03/1999");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         caducidad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,6 +188,7 @@ public class ProductoFragment extends Fragment {
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
                     BufferedReader br = new BufferedReader(archivo);
@@ -301,6 +320,48 @@ public class ProductoFragment extends Fragment {
             tost.show();
             recargarProductos();
         }
+    }
+
+    void generarTicket(String fecha1, String fecha2) throws ParseException {
+        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-aaaa");
+        Date date1 = new Date(format1.parse(fecha1).getTime());
+        Date date2 = new Date(format1.parse(fecha2).getTime());
+        PdfDocument pdfDocument=new PdfDocument();
+        Paint paint=new Paint();
+        TextPaint titulo=new TextPaint();
+        Bitmap bitmap,bitmapEscala;
+
+        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(816,1054,1).create();
+        PdfDocument.Page pagina= pdfDocument.startPage(pageInfo);
+        Canvas canvas=pagina.getCanvas();
+        bitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.logo);
+        bitmapEscala =Bitmap.createScaledBitmap(bitmap,80,80,false);
+        canvas.drawBitmap(bitmapEscala, 368, 20, paint);
+        titulo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        titulo.setTextSize(20);
+        canvas.drawText("este es el titulo", 10, 150, titulo);
+
+        descripcion.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        descripcion.setTextSize(14);
+        pdfDocument.finishPage(pagina);
+
+        File file = new File(Environment.getExternalStorageDirectory(), "Archivo.pdf");
+        try {
+            pdfDocument.writeTo(new FileOutputStream(file));
+            Toast.makeText(getContext(), "Se creo el PDF correctamente", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.d("FILES", "CODIGOOOOO");
+
+            Log.d("FILES", e.toString());
+            e.printStackTrace();
+        }
+
+        pdfDocument.close();
+
+
+
+
+
     }
 
 }
