@@ -78,7 +78,7 @@ public class ProductoFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        caducidad.setText(i2+"-"+(i1+1)+"-"+i);
+                        caducidad.setText(i2+"/"+(i1+1)+"/"+i);
                     }
                 },anio,mes,dia);
                 datePickerDialog.show();
@@ -100,7 +100,7 @@ public class ProductoFragment extends Fragment {
                             aux[0] = nombre.getText().toString();
                             aux[1] = cantidad.getText().toString();
                             aux[2] = precio.getText().toString();
-                            aux[3] = caducidad.getText().toString().replace("/","-");
+                            aux[3] = caducidad.getText().toString().replace("/","/");
                             aux[4] = descripcion.getText().toString();
                             String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "-" + aux[4] + "\n";
                             todo = todo + resultado;
@@ -150,7 +150,7 @@ public class ProductoFragment extends Fragment {
                     Toast.makeText(getContext(), "Llene los campos", Toast.LENGTH_LONG).show();
 
                 }else {
-                    String caduc = caducidad.getText().toString().replace("/","-");
+                    String caduc = caducidad.getText().toString().replace("/","/");
 
                     grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caduc, descripcion.getText().toString());
 
