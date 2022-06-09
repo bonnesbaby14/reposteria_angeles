@@ -6,34 +6,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <TextView
-        android:id="@+id/txtTitulo3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:fontFamily="serif"
-        android:text="REPORTE TOTAL"
-        android:textColor="#040404"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/txtFinalEstadistica"
-        app:layout_constraintTop_toBottomOf="@+id/txtFinalEstadistica" />
-
-    <TextView
-        android:id="@+id/txtTitulo4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="serif"
-        android:text="TICKETS"
-        android:textColor="#040404"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btnIngresosReporte"
-        app:layout_constraintTop_toBottomOf="@+id/btnIngresosReporte" />
-
     <EditText
         android:id="@+id/txtFinalEstadistica"
         android:layout_width="306dp"
@@ -60,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="serif"
-        android:text="@string/reporte"
+        android:text="@string/estadistica"
         android:textColor="#040404"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +48,7 @@
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="@+id/txtTitulo2"
         app:layout_constraintTop_toBottomOf="@+id/txtTitulo2"
-        app:srcCompat="@drawable/ic_baseline_find_in_page_24" />
+        app:srcCompat="@drawable/ic_baseline_bar_chart_24" />
 
     <EditText
         android:id="@+id/txtInicioEstadistica"
@@ -101,30 +73,23 @@
         android:id="@+id/btnIngresosReporte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Ingresos"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/txtTitulo3"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo3" />
+        android:layout_marginTop="20dp"
+        android:text="Filtrar"
+        app:layout_constraintEnd_toEndOf="@+id/txtFinalEstadistica"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/txtFinalEstadistica"
+        app:layout_constraintTop_toBottomOf="@+id/txtFinalEstadistica" />
 
-    <Button
-        android:id="@+id/btnReporteReporte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Reporte"
-        app:layout_constraintStart_toStartOf="@+id/txtTitulo4"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo4" />
+    <!--Ui component for our bar chart-->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
+        android:layout_width="360dp"
+        android:layout_height="192dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txtFinalEstadistica"
+        app:layout_constraintStart_toStartOf="@+id/txtFinalEstadistica"
+        app:layout_constraintTop_toBottomOf="@+id/btnIngresosReporte"
+        app:layout_constraintVertical_bias="0.094" />
 
-    <Button
-        android:id="@+id/btnEstadisticaReporte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Estadísticas"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.365"
-        app:layout_constraintStart_toEndOf="@+id/btnReporteReporte"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo4" />
 </androidx.constraintlayout.widget.ConstraintLayout>

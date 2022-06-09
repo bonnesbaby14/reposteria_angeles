@@ -35,6 +35,12 @@
         android:label="Reportes"
         tools:layout="@layout/fragment_reporte" />
 
+    <fragment
+        android:id="@+id/nav_estadisticas"
+        android:name="com.example.reposteria_angeles.ui.estadistica.EstadisticaFragment"
+        android:label="Estadísticas"
+        tools:layout="@layout/fragment_estadistica" />
+
 
 
 </navigation>
