@@ -4,7 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:context=".ui.reporte.ReporteFragment">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/buscar"
+        android:text="Buscar categoría"
+        android:textColor="#B20B0B0B"
+        app:layout_constraintStart_toStartOf="@+id/spBuscarCategoriaR"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        tools:ignore="MissingConstraints" />
+
+    <Spinner
+        android:id="@+id/spBuscarCategoriaR"
+        android:layout_width="310dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/edit_text"
+        app:layout_constraintEnd_toEndOf="@+id/txtInicioEstadistica"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtInicioEstadistica"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/txtTitulo3"
@@ -85,17 +110,18 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/edit_text"
         android:drawableLeft="@drawable/ic_baseline_date_range_24"
+        android:editable="false"
         android:ems="10"
         android:enabled="true"
-        android:editable="false"
-        android:inputType="none"
         android:hint="@string/fecha_inicio"
+        android:inputType="none"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textColorHint="#81000000"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/spBuscarCategoriaR" />
 
     <Button
         android:id="@+id/btnIngresosReporte"
@@ -103,6 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Ingresos"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtTitulo3"
@@ -114,6 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="Reporte"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="@+id/txtTitulo4"
         app:layout_constraintTop_toBottomOf="@+id/txtTitulo4" />
 
@@ -123,6 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="Estadísticas"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.365"
         app:layout_constraintStart_toEndOf="@+id/btnReporteReporte"

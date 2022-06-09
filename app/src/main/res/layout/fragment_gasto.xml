@@ -166,19 +166,6 @@
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintTop_toBottomOf="@+id/txtPrecio" />
 
-            <TextView
-                android:id="@+id/txtListadoProductos"
-                android:layout_width="294dp"
-                android:layout_height="182dp"
-                android:layout_marginTop="112dp"
-                android:text="Listado de gastos"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad" />
-
             <ImageButton
                 android:id="@+id/btnAgregarP"
                 android:layout_width="50dp"
