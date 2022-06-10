@@ -80,11 +80,8 @@ public class ProductoFragment extends Fragment {
         agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
         editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
         eliminar=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
-        try {
-            generarTicket("10/03/1999","10/03/1999");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+
         caducidad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -322,46 +319,6 @@ public class ProductoFragment extends Fragment {
         }
     }
 
-    void generarTicket(String fecha1, String fecha2) throws ParseException {
-        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-aaaa");
-        Date date1 = new Date(format1.parse(fecha1).getTime());
-        Date date2 = new Date(format1.parse(fecha2).getTime());
-        PdfDocument pdfDocument=new PdfDocument();
-        Paint paint=new Paint();
-        TextPaint titulo=new TextPaint();
-        Bitmap bitmap,bitmapEscala;
 
-        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(816,1054,1).create();
-        PdfDocument.Page pagina= pdfDocument.startPage(pageInfo);
-        Canvas canvas=pagina.getCanvas();
-        bitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.logo);
-        bitmapEscala =Bitmap.createScaledBitmap(bitmap,80,80,false);
-        canvas.drawBitmap(bitmapEscala, 368, 20, paint);
-        titulo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        titulo.setTextSize(20);
-        canvas.drawText("este es el titulo", 10, 150, titulo);
-
-        descripcion.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        descripcion.setTextSize(14);
-        pdfDocument.finishPage(pagina);
-
-        File file = new File(Environment.getExternalStorageDirectory(), "Archivo.pdf");
-        try {
-            pdfDocument.writeTo(new FileOutputStream(file));
-            Toast.makeText(getContext(), "Se creo el PDF correctamente", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Log.d("FILES", "CODIGOOOOO");
-
-            Log.d("FILES", e.toString());
-            e.printStackTrace();
-        }
-
-        pdfDocument.close();
-
-
-
-
-
-    }
 
 }
