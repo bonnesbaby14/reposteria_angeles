@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class GastoFragment extends Fragment {
 
@@ -36,6 +37,7 @@ public class GastoFragment extends Fragment {
     ArrayList<String> gastosList, productsList;
     ArrayAdapter<String> productAdapter;
     String puntero;
+    private int dia, mes, anio;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class GastoFragment extends Fragment {
                             aux[2] = costo.getText().toString();
                             aux[3] = numProduct.getText().toString();
                             aux[4] = description.getText().toString();
-                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4] +"\n";
+                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4] +"-" +aux[5]+"\n";
                             todo += resultado;
                         }else{
                             todo = todo + linea +"\n";
@@ -195,7 +197,14 @@ public class GastoFragment extends Fragment {
     public void grabar(String producto, String nombre, String costo, String numProduct, String description ){
         try{
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("gastos.txt", MainActivity.MODE_APPEND));
-            archivo.write(producto+"-"+nombre+"-"+costo+"-"+numProduct+"-"+description+"\n");
+            //FECHA DE GUARDADO
+            Calendar cal = Calendar.getInstance();
+            dia = cal.get(Calendar.DAY_OF_MONTH);
+            mes = cal.get(Calendar.MONTH);
+            anio = cal.get(Calendar.YEAR);
+            String fecha = dia+"/"+(mes+1)+"/"+anio;
+
+            archivo.write(producto+"-"+nombre+"-"+costo+"-"+numProduct+"-"+description+"-"+fecha+"\n");
             archivo.flush();
             archivo.close();
         }catch (IOException ex){

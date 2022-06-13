@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class ClienteFragment extends Fragment {
@@ -36,6 +37,7 @@ public class ClienteFragment extends Fragment {
         ArrayList<String> clientes;
         ImageButton agregar, editar, eliminar;
         String puntero;
+        private int dia, mes, anio;
         public View onCreateView(@NonNull LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
 
@@ -72,7 +74,7 @@ public class ClienteFragment extends Fragment {
                                 aux[1] = direccion.getText().toString();
                                 aux[2] = telefono.getText().toString();
                                 aux[3] = preferencia.getText().toString();
-                                String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "\n";
+                                String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "-" + aux[4] + "\n";
                                 todo += resultado;
                                 editar  = true;
                             }else{
@@ -188,7 +190,14 @@ public class ClienteFragment extends Fragment {
     public void grabar(String nombre, String direccion, String telefono, String preferencia){
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("clientes.txt",MainActivity.MODE_APPEND));
-            archivo.write(nombre+"-"+direccion+"-"+telefono+"-"+preferencia+"\n");
+            //FECHA DE GUARDADO
+            Calendar cal = Calendar.getInstance();
+            dia = cal.get(Calendar.DAY_OF_MONTH);
+            mes = cal.get(Calendar.MONTH);
+            anio = cal.get(Calendar.YEAR);
+            String fecha = dia+"/"+(mes+1)+"/"+anio;
+
+            archivo.write(nombre+"-"+direccion+"-"+telefono+"-"+preferencia+"-"+fecha+"\n");
             archivo.flush();
             archivo.close();
 

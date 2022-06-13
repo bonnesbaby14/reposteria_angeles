@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class IngresoFragment extends Fragment {
 
@@ -36,6 +37,7 @@ public class IngresoFragment extends Fragment {
     ArrayList<String> ventas, clientes, productos;
     ArrayAdapter<String> adapterCliente, adapterProducto;
     String puntero;
+    private int dia, mes, anio;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -117,7 +119,7 @@ public class IngresoFragment extends Fragment {
                             aux[4] = productVendido.getText().toString();
                             aux[5] = descripcion.getText().toString();
                             String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4]
-                                    +"-"+aux[5]+"\n";
+                                    +"-"+aux[5]+"-"+aux[6]+"\n";
                             todo+=resultado;
                             editar = true;
                         }else{
@@ -212,7 +214,14 @@ public class IngresoFragment extends Fragment {
                        String nombreVenta, String productVendido, String descripcion){
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("ingresos.txt", MainActivity.MODE_APPEND));
-            archivo.write(cliente+"-"+producto+"-"+ventaTotal+"-"+nombreVenta+"-"+productVendido+"-"+descripcion+"\n");
+            //FECHA DE GUARDADO
+            Calendar cal = Calendar.getInstance();
+            dia = cal.get(Calendar.DAY_OF_MONTH);
+            mes = cal.get(Calendar.MONTH);
+            anio = cal.get(Calendar.YEAR);
+            String fecha = dia+"/"+(mes+1)+"/"+anio;
+
+            archivo.write(cliente+"-"+producto+"-"+ventaTotal+"-"+nombreVenta+"-"+productVendido+"-"+descripcion+"-"+fecha+"\n");
             archivo.flush();
             archivo.close();
         }catch (IOException ex){

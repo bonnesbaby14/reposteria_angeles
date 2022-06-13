@@ -65,7 +65,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
             spinner = root.findViewById(R.id.spBuscarCategoriaR);
             opciones = new ArrayList<String>();
 
-            opciones.add("Seleciona");
+            opciones.add("Selecciona");
             opciones.add("Productos");
             opciones.add("Ingresos");
             opciones.add("Gastos");
