@@ -103,8 +103,12 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
 
-                    if(puntero.equals("") || puntero.equals("Seleciona")){
+                    if(puntero.equals("") || puntero.equals("Selecciona")){
                         Toast.makeText(getContext(),"Seleciona una entidad",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(txtFinal.getText().toString().isEmpty()|| txtInicio.getText().toString().isEmpty()){
+                        Toast.makeText(getContext(),"Seleciona fechas",Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -171,8 +175,6 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
         Log.d("FILES", "fechaformato"+date1.toString());
         Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(fecha2);
 
-
-
         PdfDocument pdfDocument=new PdfDocument();
         Log.d("FILES", "ENTRAMOS2");
         Paint paint=new Paint();
@@ -180,7 +182,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
         TextPaint descripcion = new TextPaint();
         Bitmap bitmap,bitmapEscala;
 
-        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(500,600,1).create();
+        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(750,700,1).create();
         PdfDocument.Page pagina= pdfDocument.startPage(pageInfo);
         Canvas canvas=pagina.getCanvas();
         bitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.logo);
@@ -195,6 +197,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
         descripcion.setTextSize(15);
 
         int y = 300;
+        boolean hayDatos = false;
         switch (puntero){
             case "Productos":
                 canvas.drawText("NOMBRE    CANTIDAD    PRECIO    CADUCIDAD     DESCRIPCION", 5, y, descripcion);
@@ -210,13 +213,18 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
                             String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[3]);
                         if(date.after(date1) && date.before(date2)){
+                            hayDatos = true;
+                           aux[0] = espacioCampos("nombre",aux[0]);
+                           aux[1] = espacioCampos("cantidad",aux[1]);
+                           aux[2] = espacioCampos("precio",aux[2]);
+                           aux[3] = espacioCampos("caducidad",aux[3]);
+                           aux[4] = espacioCampos("descripcion",aux[4]);
 
-                            canvas.drawText(aux[0]+"       "+aux[1]+"       "+aux[2]+"       "+aux[3]+"      "+aux[4], 5, y, descripcion);
+
+                            canvas.drawText(aux[0]+"              "+aux[1]+"          "+aux[2]+"          "+aux[3]+
+                                    "        "+aux[4], 5, y, descripcion);
                             y+=20;
                         }
-
-
-
 
                         linea = br.readLine();
                     }
@@ -229,13 +237,118 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                 }
 
-
                 break;
             case "Ingresos":
+                canvas.drawText("CLIENTE    PRODUCTOS    VENTA TOTAL    NOMBRE VENTA     PRODUCTOS VENDIDOS    DESCRIPCION", 5, y, descripcion);
+                y+=20;
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("ingresos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+
+                    while (linea != null) {
+
+                        String[] aux = linea.split("-");
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[6]);
+                        if(date.after(date1) && date.before(date2)){
+                            hayDatos = true;
+                            aux[0] = espacioCampos("CLIENTE",aux[0]);
+                            aux[1] = espacioCampos("PRODUCTOS",aux[1]);
+                            aux[2] = espacioCampos("VENTA TOTAL",aux[2]);
+                            aux[3] = espacioCampos("NOMBRE VENTA",aux[3]);
+                            aux[4] = espacioCampos("PRODUCTOS VENDIDOS",aux[4]);
+                            aux[5] = espacioCampos("DESCRIPCION",aux[5]);
+
+                            canvas.drawText(aux[0]+"           "+aux[1]+"               "+aux[2]+"            "+aux[3]+
+                                    "           "+aux[4]+"               "+aux[5], 5, y, descripcion);
+                            y+=20;
+                        }
+
+                        linea = br.readLine();
+                    }
+
+                    br.close();
+                    archivo.close();
+
+
+                } catch (IOException e) {
+
+                }
                 break;
             case "Gastos":
+                canvas.drawText("PRODUCTOS          NOMBRE          COSTO        PRODUCTOS NUEVOS         DESCRIPCION", 5, y, descripcion);
+                y+=20;
+
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+
+                    while (linea != null) {
+
+                        String[] aux = linea.split("-");
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[5]);
+                        if(date.after(date1) && date.before(date2)){
+                            hayDatos = true;
+                            aux[0] = espacioCampos("PRODUCTOS",aux[0]);
+                            aux[1] = espacioCampos("NOMBRE",aux[1]);
+                            aux[2] = espacioCampos("COSTO",aux[2]);
+                            aux[3] = espacioCampos("PRODUCTOS NUEVOS",aux[3]);
+                            aux[4] = espacioCampos("DESCRIPCION",aux[4]);
+
+
+                            canvas.drawText(aux[0]+"                "+aux[1]+"             "+aux[2]+"                    "+aux[3]+
+                                    "                        "+aux[4], 5, y, descripcion);
+                            y+=20;
+                        }
+
+                        linea = br.readLine();
+                    }
+
+                    br.close();
+                    archivo.close();
+
+
+                } catch (IOException e) {
+
+                }
+
                 break;
             case "Clientes":
+                canvas.drawText("NOMBRE               DIRECCIÓN               TELÉFONO               PREFERENCIAS", 5, y, descripcion);
+                y+=20;
+
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("clientes.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+
+                    while (linea != null) {
+
+                        String[] aux = linea.split("-");
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[4]);
+                        if(date.after(date1) && date.before(date2)){
+                            hayDatos = true;
+                            aux[0] = espacioCampos("NOMBRE",aux[0]);
+                            aux[1] = espacioCampos("DIRECCIÓN",aux[1]);
+                            aux[2] = espacioCampos("TELÉFONO",aux[2]);
+                            aux[3] = espacioCampos("PREFERENCIAS",aux[3]);
+
+
+                            canvas.drawText(aux[0]+"                   "+aux[1]+"                "+aux[2]+"                       "+aux[3], 5, y, descripcion);
+                            y+=20;
+                        }
+
+                        linea = br.readLine();
+                    }
+
+                    br.close();
+                    archivo.close();
+
+
+                } catch (IOException e) {
+
+                }
                 break;
         }
 
@@ -243,14 +356,23 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
         pdfDocument.finishPage(pagina);
 
         try {
-            Log.d("FILES", "try");
-            ContextWrapper contextWrapper=new ContextWrapper(getContext());
-            File directory=contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-            File file = new File(directory, "Reporte_"+puntero  +".pdf");
+            if(!hayDatos){
+                Toast.makeText(getContext(), "No hay registros en estas fechas", Toast.LENGTH_LONG).show();
 
-            pdfDocument.writeTo(new FileOutputStream(file));
+            }else {
+                Log.d("FILES", "try");
+                ContextWrapper contextWrapper = new ContextWrapper(getContext());
+                File directory = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+                int num = 1;
+                String nameDocument = "Reporte_" + puntero + "_" + num + ".pdf";
+                File file = new File(directory, nameDocument);
+                file = nombreArchivo(file, nameDocument, directory);
 
-            Toast.makeText(getContext(), "Se creo el PDF correctamente en "+directory.toString(), Toast.LENGTH_LONG).show();
+
+                pdfDocument.writeTo(new FileOutputStream(file));
+
+                Toast.makeText(getContext(), "Se creo el PDF correctamente en " + directory.toString(), Toast.LENGTH_LONG).show();
+            }
         } catch (Exception e) {
             Log.d("FILES", "Error escritura de archivo");
 
@@ -264,6 +386,33 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
 
 
-    }
+    }//generarTicket
+    private String espacioCampos(String campo, String dato){
+        if(dato.length()<campo.length()){
+                for(int i=0;i<campo.length()-dato.length();i++){
+                    dato +="  ";
+                }
+                return dato;
+            }
+            else
+                return dato;
+    }//espacioCampos
+    //Para nombrar archivos y evitar sobreescribir
+    private File nombreArchivo(File file,String nameDocument,File directory){
+        if(!file.exists())
+            return file;
+
+        String[] name = nameDocument.split("_");
+        String auxiliar = name[2];
+        String[] pos = auxiliar.split("\\.");
+        String position = pos[0];
+        int number = Integer.parseInt(position);
+        number++;
+        nameDocument = "Reporte_"+puntero+"_"+number+".pdf";
+        file = new File(directory, nameDocument);
+
+        return nombreArchivo(file,nameDocument,directory);
+
+    }//nombreArchivo
 }
 
