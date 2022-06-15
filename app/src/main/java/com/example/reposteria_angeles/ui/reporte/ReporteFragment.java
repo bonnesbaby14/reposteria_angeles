@@ -142,7 +142,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
 
             return root;
-        }//reporteTotal
+        }//onCreateView
 
         @Override
         public void onDestroyView() {
