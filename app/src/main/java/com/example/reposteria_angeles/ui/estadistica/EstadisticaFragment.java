@@ -1,8 +1,17 @@
 package com.example.reposteria_angeles.ui.estadistica;
 
 import android.app.DatePickerDialog;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +47,8 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -54,11 +65,12 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
         private TextView txtInicio, txtFinal;
         private int dia, mes, anio;
         private ArrayList barArrayList;
-        private Button filtrar;
+        private Button filtrar, ticket;
         private Spinner categorias;
         private ArrayList<String> opciones;
         private String puntero = "";
-        BarChart barChart;
+        BarChart barChart, charTicket;
+        boolean presionado = false;
         public View onCreateView(@NonNull LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
 
@@ -67,6 +79,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
             View root = binding.getRoot();
 
             filtrar = (Button) root.findViewById(R.id.btnIngresosReporte);
+            ticket = (Button) root.findViewById(R.id.btnTicketEstadistica);
             txtInicio = (TextView) root.findViewById(R.id.txtInicioEstadistica);
             txtInicio.setOnClickListener(this);
             txtFinal = (TextView) root.findViewById(R.id.txtFinalEstadistica);
@@ -112,17 +125,73 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 public void onClick(View v) {
                     if(puntero.equals("Selecciona")){
                         Toast.makeText(getContext(), "Selecciona una categoría", Toast.LENGTH_SHORT).show();
+                        presionado = false;
                     }else if(txtInicio.getText().toString().isEmpty()||txtFinal.getText().toString().isEmpty()) {
+                        presionado = false;
                         Toast.makeText(getContext(), "Selecciona fechas", Toast.LENGTH_SHORT).show();
                     }else{
                         try {
                             generarEstadistica(txtInicio.getText().toString(), txtFinal.getText().toString());
+                            presionado = true;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
                 }
             });//filtrar
+            //button ticket
+            ticket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!presionado){
+                        Toast.makeText(getContext(), "Genera primero el gráfico", Toast.LENGTH_SHORT).show();
+                    }else{
+                        PdfDocument pdfDocument=new PdfDocument();
+                        Paint paint=new Paint();
+                        TextPaint titulo=new TextPaint();
+                        TextPaint descripcion = new TextPaint();
+                        Bitmap bitmap,bitmapEscala;
+                        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(750,700,1).create();
+                        PdfDocument.Page pagina= pdfDocument.startPage(pageInfo);
+                        Canvas canvas=pagina.getCanvas();
+                        bitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.logo);
+                        bitmapEscala =Bitmap.createScaledBitmap(bitmap,90,90,false);
+                        canvas.drawBitmap(bitmapEscala, 650, 610, paint);
+                        titulo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                        titulo.setTextSize(30);
+                        charTicket.draw(canvas);
+                        canvas.drawText("Estadística "+puntero, 10, 420, titulo);
+                        titulo.setTextSize(20);
+                        canvas.drawText("Del "+txtInicio.getText().toString()+" al "+txtFinal.getText().toString(), 10, 450, titulo);
+                        descripcion.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        descripcion.setTextSize(15);
+
+                        pdfDocument.finishPage(pagina);
+
+                        try {
+                                Log.d("FILES", "try");
+                                ContextWrapper contextWrapper = new ContextWrapper(getContext());
+                                File directory = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+                                int num = 1;
+                                String nameDocument = "Estadistica_" + puntero + "_" + num + ".pdf";
+                                File file = new File(directory, nameDocument);
+                                file = nombreArchivo(file, nameDocument, directory);
+
+
+                                pdfDocument.writeTo(new FileOutputStream(file));
+
+                                Toast.makeText(getContext(), "Se creo el PDF correctamente en " + directory.toString(), Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Log.d("FILES", "Error escritura de archivo");
+
+                            Log.d("FILES", e.toString());
+                            e.printStackTrace();
+                        }
+
+                        pdfDocument.close();
+                    }
+                }
+            });
             //barChart.getDescription().setEnabled(true);
 
             return root;
@@ -227,6 +296,22 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
             datePickerDialog.show();
         }
     }//onClick
+    private File nombreArchivo(File file,String nameDocument,File directory){
+        if(!file.exists())
+            return file;
+
+        String[] name = nameDocument.split("_");
+        String auxiliar = name[2];
+        String[] pos = auxiliar.split("\\.");
+        String position = pos[0];
+        int number = Integer.parseInt(position);
+        number++;
+        nameDocument = "Estadistica_"+puntero+"_"+number+".pdf";
+        file = new File(directory, nameDocument);
+
+        return nombreArchivo(file,nameDocument,directory);
+
+    }//nombreArchivo
     private void generarEstadistica(String fecha1, String fecha2) throws ParseException {
         Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(fecha1);
         Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(fecha2);
@@ -283,6 +368,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 axisX(barChart.getXAxis(),arrayFechas);
                 axisLeft(barChart.getAxisLeft());
                 axisRight(barChart.getAxisRight());
+                charTicket = barChart;
 
 
                 break;
@@ -338,6 +424,8 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 axisX(barChart.getXAxis(),arrayFechas);
                 axisLeft(barChart.getAxisLeft());
                 axisRight(barChart.getAxisRight());
+                charTicket = barChart;
+
                 break;
             case "Gastos":
                 fechaux1="";
@@ -391,6 +479,8 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 axisX(barChart.getXAxis(),arrayFechas);
                 axisLeft(barChart.getAxisLeft());
                 axisRight(barChart.getAxisRight());
+                charTicket = barChart;
+
                 break;
             case "Clientes":
                 fechaux1="";
@@ -444,6 +534,8 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 axisX(barChart.getXAxis(),arrayFechas);
                 axisLeft(barChart.getAxisLeft());
                 axisRight(barChart.getAxisRight());
+                charTicket = barChart;
+
                 break;
         }
     }//generarEstadistica
