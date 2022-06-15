@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -90,7 +91,6 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });//Categoria setOnItemSelectedListener
             //Grafica
@@ -99,6 +99,9 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
             BarDataSet barDataSet = new BarDataSet(barArrayList, "Estadísticas");
             BarData barData = new BarData (barDataSet);
             barChart.setData(barData);
+            barChart.getLegend().setEnabled(false);
+            barChart.getDescription().setText("Estadísticas");
+            barChart.getDescription().setTextSize(20);
             barDataSet.setColors(ColorTemplate.PASTEL_COLORS);
             barDataSet.setValueTextColor(Color.BLACK);
             barDataSet.setValueTextSize(8f);
@@ -107,10 +110,16 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
             filtrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        generarEstadistica(txtInicio.getText().toString(), txtFinal.getText().toString());
-                    }catch (ParseException e){
-                        e.printStackTrace();
+                    if(puntero.equals("Selecciona")){
+                        Toast.makeText(getContext(), "Selecciona una categoría", Toast.LENGTH_SHORT).show();
+                    }else if(txtInicio.getText().toString().isEmpty()||txtFinal.getText().toString().isEmpty()) {
+                        Toast.makeText(getContext(), "Selecciona fechas", Toast.LENGTH_SHORT).show();
+                    }else{
+                        try {
+                            generarEstadistica(txtInicio.getText().toString(), txtFinal.getText().toString());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });//filtrar
@@ -265,7 +274,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 for(int i=0;i<arrayCant.length;i++){
                     arrayCant[i] = (int) cantProduct.get(i);
                 }
-                barChart=(BarChart)getSameChart(barChart,"Productos",Color.WHITE,Color.WHITE,3000,arrayFechas);
+                barChart=(BarChart)getSameChart(barChart,"Productos a caducar",Color.WHITE,Color.WHITE,3000,arrayFechas);
                 barChart.setDrawGridBackground(true);
                 barChart.setDrawBarShadow(true);
                 barChart.setData(getBarData(arrayCant));
@@ -320,7 +329,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 for(int i=0;i<arrayVenta.length;i++){
                     arrayVenta[i] = (int) venta.get(i);
                 }
-                barChart=(BarChart)getSameChart(barChart,"Ingresos",Color.WHITE,Color.WHITE,3000,arrayFechas);
+                barChart=(BarChart)getSameChart(barChart,"$ Ingresos",Color.WHITE,Color.WHITE,3000,arrayFechas);
                 barChart.setDrawGridBackground(true);
                 barChart.setDrawBarShadow(true);
                 barChart.setData(getBarData(arrayVenta));
@@ -331,8 +340,110 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                 axisRight(barChart.getAxisRight());
                 break;
             case "Gastos":
+                fechaux1="";
+                fechaux2="";
+                fecha = null;
+                fecha = new ArrayList<String>();
+                ArrayList<Integer> gasto = new ArrayList<Integer>();
+
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+
+                    int pos = 0;
+                    while (linea != null) {
+
+                        String[] aux = linea.split("-");
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[5]);
+
+                        if(date.after(date1) && date.before(date2)){
+                            fechaux1 = aux[5];
+                            if(fechaux1.equals(fechaux2)){
+                                int valor = gasto.get(pos-1) + Integer.parseInt(aux[2]);
+                                gasto.set(pos-1,valor);
+                            }else{
+                                fecha.add(aux[5]);
+                                gasto.add(pos,Integer.parseInt(aux[2]));
+                                pos++;
+                            }
+                            fechaux2 = aux[5];
+                        }
+                        linea = br.readLine();
+                    }
+                    br.close();
+                    archivo.close();
+                } catch (IOException e) {
+
+                }
+                //Pasamos los arraylist a arreglos
+                arrayFechas = fecha.toArray(new String[fecha.size()]);
+                int[] arrayGasto = new int[gasto.size()];
+                for(int i=0;i<arrayGasto.length;i++){
+                    arrayGasto[i] = (int) gasto.get(i);
+                }
+                barChart=(BarChart)getSameChart(barChart,"$ Gastos",Color.WHITE,Color.WHITE,3000,arrayFechas);
+                barChart.setDrawGridBackground(true);
+                barChart.setDrawBarShadow(true);
+                barChart.setData(getBarData(arrayGasto));
+                barChart.invalidate();
+                barChart.getLegend().setEnabled(false);
+                axisX(barChart.getXAxis(),arrayFechas);
+                axisLeft(barChart.getAxisLeft());
+                axisRight(barChart.getAxisRight());
                 break;
             case "Clientes":
+                fechaux1="";
+                fechaux2="";
+                fecha = null;
+                fecha = new ArrayList<String>();
+                ArrayList<Integer> nuevoCliente = new ArrayList<Integer>();
+
+                try {
+                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("clientes.txt"));
+                    BufferedReader br = new BufferedReader(archivo);
+                    String linea = br.readLine();
+
+                    int pos = 0;
+                    while (linea != null) {
+
+                        String[] aux = linea.split("-");
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[4]);
+
+                        if(date.after(date1) && date.before(date2)){
+                            fechaux1 = aux[4];
+                            if(fechaux1.equals(fechaux2)){
+                                int valor = nuevoCliente.get(pos-1) + 1;
+                                nuevoCliente.set(pos-1,valor);
+                            }else{
+                                fecha.add(aux[4]);
+                                nuevoCliente.add(1);
+                                pos++;
+                            }
+                            fechaux2 = aux[4];
+                        }
+                        linea = br.readLine();
+                    }
+                    br.close();
+                    archivo.close();
+                } catch (IOException e) {
+
+                }
+                //Pasamos los arraylist a arreglos
+                arrayFechas = fecha.toArray(new String[fecha.size()]);
+                int[] arrayCliente = new int[nuevoCliente.size()];
+                for(int i=0;i<arrayCliente.length;i++){
+                    arrayCliente[i] = (int) nuevoCliente.get(i);
+                }
+                barChart=(BarChart)getSameChart(barChart,"Nuevos Clientes",Color.WHITE,Color.WHITE,3000,arrayFechas);
+                barChart.setDrawGridBackground(true);
+                barChart.setDrawBarShadow(true);
+                barChart.setData(getBarData(arrayCliente));
+                barChart.invalidate();
+                barChart.getLegend().setEnabled(false);
+                axisX(barChart.getXAxis(),arrayFechas);
+                axisLeft(barChart.getAxisLeft());
+                axisRight(barChart.getAxisRight());
                 break;
         }
     }//generarEstadistica
