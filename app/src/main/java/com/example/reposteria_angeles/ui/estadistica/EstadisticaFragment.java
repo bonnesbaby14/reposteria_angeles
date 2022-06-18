@@ -333,10 +333,10 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[3]);
 
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1)  && date.before(date2)){
                             fechaux1 = aux[3];
                             if(fechaux1.equals(fechaux2)){
-                                cantProduct.set(pos-1,cantProduct.get(pos)+Integer.parseInt(aux[1]));
+                                cantProduct.set(pos-1,cantProduct.get(pos-1)+Integer.parseInt(aux[1]));
                             }else{
                                 fecha.add(aux[3]);
                                 cantProduct.add(Integer.parseInt(aux[1]));

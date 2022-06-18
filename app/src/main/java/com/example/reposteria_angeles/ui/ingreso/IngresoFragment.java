@@ -1,6 +1,8 @@
 package com.example.reposteria_angeles.ui.ingreso;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +26,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class IngresoFragment extends Fragment {
 
@@ -198,6 +202,27 @@ public class IngresoFragment extends Fragment {
                 }//catch
             }//onClick
         });//eliminar
+        eventoNumProducto();
+        buscarProducto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int costo = obtenerPrecioProducto(parent.getItemAtPosition(position).toString());
+                int num = 0;
+                try {
+                    num = Integer.parseInt(productVendido.getText().toString());
+                }catch (Exception e){
+
+                }
+                int total = costo * num;
+                ventaTotal.setText(String.valueOf(total));
+                ventaTotal.setEnabled(false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
        // final TextView textView = binding.textGallery;
        // gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -319,4 +344,56 @@ public class IngresoFragment extends Fragment {
         }//catch
         return arrayList;
     }//llenarSpinner
+    private int obtenerPrecioProducto(String producto){
+        int costo = 0;
+        ArrayList<Integer> venta = new ArrayList<Integer>();
+
+        try {
+            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
+            BufferedReader br = new BufferedReader(archivo);
+            String linea = br.readLine();
+
+            int pos = 0;
+            while (linea != null) {
+
+                String[] aux = linea.split("-");
+                if(producto.equals(aux[0])){
+                   costo = (int) Integer.parseInt(aux[2]);
+                }
+                linea = br.readLine();
+            }
+            br.close();
+            archivo.close();
+        } catch (IOException e) {
+
+        }
+        return costo;
+    }//obtenerPrecioProducto
+    private void eventoNumProducto(){
+        productVendido.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int costo = obtenerPrecioProducto(buscarProducto.getSelectedItem().toString());
+                int num = 0;
+                try {
+                    num = Integer.parseInt(productVendido.getText().toString());
+                }catch (Exception e){
+
+                }
+                int total = costo * num;
+                ventaTotal.setText(String.valueOf(total));
+                ventaTotal.setEnabled(false);
+            }
+        });
+    }//eventoNumProducto
 }//class
