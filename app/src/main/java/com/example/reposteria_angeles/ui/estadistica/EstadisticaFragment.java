@@ -333,7 +333,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[3]);
 
-                        if(date.after(date1)  && date.before(date2)){
+                        if(date.after(date1)  || date.before(date2)){
                             fechaux1 = aux[3];
                             if(fechaux1.equals(fechaux2)){
                                 cantProduct.set(pos-1,cantProduct.get(pos-1)+Integer.parseInt(aux[1]));
@@ -390,7 +390,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[6]);
 
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             fechaux1 = aux[6];
                             if(fechaux1.equals(fechaux2)){
                                 int valor = venta.get(pos-1) + Integer.parseInt(aux[2]);
@@ -445,7 +445,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[5]);
 
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             fechaux1 = aux[5];
                             if(fechaux1.equals(fechaux2)){
                                 int valor = gasto.get(pos-1) + Integer.parseInt(aux[2]);
@@ -500,7 +500,7 @@ public class EstadisticaFragment extends Fragment implements View.OnClickListene
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[4]);
 
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             fechaux1 = aux[4];
                             if(fechaux1.equals(fechaux2)){
                                 int valor = nuevoCliente.get(pos-1) + 1;

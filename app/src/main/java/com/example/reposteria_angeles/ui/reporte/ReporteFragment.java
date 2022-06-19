@@ -230,7 +230,8 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                             String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[3]);
-                        if(date.after(date1) && date.before(date2)){
+
+                        if(date.after(date1) || date.before(date2)){
                             hayDatos = true;
                            aux[0] = espacioCampos("nombre",aux[0]);
                            aux[1] = espacioCampos("cantidad",aux[1]);
@@ -268,7 +269,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[6]);
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             hayDatos = true;
                             aux[0] = espacioCampos("CLIENTE",aux[0]);
                             aux[1] = espacioCampos("PRODUCTOS",aux[1]);
@@ -306,7 +307,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[5]);
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             hayDatos = true;
                             aux[0] = espacioCampos("PRODUCTOS",aux[0]);
                             aux[1] = espacioCampos("NOMBRE",aux[1]);
@@ -345,7 +346,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                         String[] aux = linea.split("-");
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[4]);
-                        if(date.after(date1) && date.before(date2)){
+                        if(date.after(date1) || date.before(date2)){
                             hayDatos = true;
                             aux[0] = espacioCampos("NOMBRE",aux[0]);
                             aux[1] = espacioCampos("DIRECCIÓN",aux[1]);
@@ -450,7 +451,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                 String[] aux = linea.split("-");
                 Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[3]);
-                if(date.after(date1) && date.before(date2)){
+                if(date.after(date1) || date.before(date2)){
                     hayDatos = true;
                     aux[0] = espacioCampos("nombre",aux[0]);
                     aux[1] = espacioCampos("cantidad",aux[1]);
@@ -491,7 +492,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                 String[] aux = linea.split("-");
                 Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[6]);
-                if(date.after(date1) && date.before(date2)){
+                if(date.after(date1) || date.before(date2)){
                     hayDatos = true;
                     aux[0] = espacioCampos("CLIENTE",aux[0]);
                     aux[1] = espacioCampos("PRODUCTOS",aux[1]);
@@ -533,7 +534,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                 String[] aux = linea.split("-");
                 Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[5]);
-                if(date.after(date1) && date.before(date2)){
+                if(date.after(date1) || date.before(date2)){
                     hayDatos = true;
                     aux[0] = espacioCampos("PRODUCTOS",aux[0]);
                     aux[1] = espacioCampos("NOMBRE",aux[1]);
@@ -575,7 +576,7 @@ public class ReporteFragment extends Fragment implements View.OnClickListener {
 
                 String[] aux = linea.split("-");
                 Date date=new SimpleDateFormat("dd/MM/yyyy").parse(aux[4]);
-                if(date.after(date1) && date.before(date2)){
+                if(date.after(date1) || date.before(date2)){
                     hayDatos = true;
                     aux[0] = espacioCampos("NOMBRE",aux[0]);
                     aux[1] = espacioCampos("DIRECCIÓN",aux[1]);
