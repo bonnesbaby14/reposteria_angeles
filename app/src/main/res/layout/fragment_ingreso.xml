@@ -126,7 +126,7 @@
                 android:id="@+id/txtNombre"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="36dp"
                 android:background="@drawable/edit_text"
                 android:drawableLeft="@drawable/ic_baseline_attach_money_24"
                 android:ems="10"
@@ -135,15 +135,15 @@
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textColorHint="#81000000"
-                app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/spBuscarProductoGasto" />
+                app:layout_constraintEnd_toEndOf="@+id/txtCantidad"
+                app:layout_constraintStart_toStartOf="@+id/txtCantidad"
+                app:layout_constraintTop_toBottomOf="@+id/txtCantidad" />
 
             <EditText
                 android:id="@+id/txtPrecio"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="32dp"
                 android:background="@drawable/edit_text"
                 android:drawableLeft="@drawable/ic_baseline_123_24"
                 android:ems="10"
@@ -153,9 +153,8 @@
                 android:textColor="#000000"
                 android:textColorHint="#81000000"
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtCantidad" />
+                app:layout_constraintTop_toBottomOf="@+id/spBuscarProductoGasto" />
 
             <EditText
                 android:id="@+id/txtCantidad"
@@ -172,7 +171,7 @@
                 android:textColorHint="#81000000"
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPrecio" />
 
             <EditText
                 android:id="@+id/txtCaduccidad"
@@ -190,7 +189,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
-                app:layout_constraintTop_toBottomOf="@+id/txtPrecio" />
+                app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
 
             <ImageButton
                 android:id="@+id/btnAgregarP"

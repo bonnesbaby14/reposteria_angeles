@@ -39,6 +39,10 @@ public class RegistroActivity extends AppCompatActivity {
                 String user=usuario.getText().toString();
                 String contrasena=contra.getText().toString();
                 String nombr=nombre.getText().toString();
+                if(user.isEmpty()||contrasena.isEmpty()||nombr.isEmpty()){
+                    Toast.makeText(RegistroActivity.this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
 
                 try {

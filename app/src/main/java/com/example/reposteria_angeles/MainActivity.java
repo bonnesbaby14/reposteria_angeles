@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "usuario":
-                Toast toast=Toast.makeText(this,"Usuario incorrecta",Toast.LENGTH_SHORT);
+                Toast toast=Toast.makeText(this,"Usuario incorrecto",Toast.LENGTH_SHORT);
                 toast.show();
 
                 break;
