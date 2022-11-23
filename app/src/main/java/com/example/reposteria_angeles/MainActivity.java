@@ -27,117 +27,63 @@ import java.io.OutputStreamWriter;
 
 
 public class MainActivity extends AppCompatActivity {
-    EditText usuario;
-    EditText contra;
+    EditText user;
+    EditText password;
     TextView registrar;
+    ControladorBD admin;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.MANAGE_EXTERNAL_STORAGE},200);
-
-
-
-        try {
-        InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
-        if (archivo==null) {
-
-            grabar();
-        }
-        } catch (IOException e) {
-            Toast.makeText(this,"No hay Archivo",Toast.LENGTH_SHORT).show();
-            grabar();
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user= findViewById(R.id.txtCorreo);
+        password= findViewById(R.id.txtContrasenia);
+        admin = new ControladorBD(this);
     }
 
 
-    public void grabar() {
-        try {
-            OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_PRIVATE));
-            archivo.write("admin-admin-admin-admin \n");
-            archivo.flush();
-            archivo.close();
-        } catch (IOException e) {
 
-
-
+    public String checkCredentials(String usr,String paswd){
+        SQLiteDatabase db = admin.getWritableDatabase();
+        Cursor cursorUser = db.rawQuery("Select * from users where userEmail=?",new String[]{usr});
+        Cursor cursorPassw = db.rawQuery("Select * from users where userPassword=?",new String[]{paswd});
+        if(cursorUser.getCount()==1 && cursorPassw.getCount()==1) {
+            db.close();
+            return "correct";
         }
-        Toast t = Toast.makeText(this, "APP INICIADA POR PRIMERA VEZ",Toast.LENGTH_SHORT);
-        t.show();
-
-    }
-
-    public String login(String usuario,String contra){
-        try {
-            InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
-            BufferedReader br = new BufferedReader(archivo);
-            String linea = br.readLine();
-            String todo = "";
-            while (linea != null) {
-                String [] split=linea.split("-");
-                Log.d("DATA",split.toString());
-                if(split[0].equals(usuario)){
-                    if(split[1].equals(contra)){
-                        return "correcto";
-                    }
-                    return "contrasena";
-
-
-                }
-                linea = br.readLine();
-            }
-            br.close();
-            archivo.close();
-            return "usuario";
-
-
-        }catch(IOException e){
-
+        if(cursorUser.getCount()==1 && cursorPassw.getCount()==0) {
+            db.close();
+            return "wfield";
         }
-        return "null";
-    }
+        else {
+            db.close();
+            return "none";
+        }
+    }//checkCredentials
 
-    public void registrar(View view){
+    public void signin(View view){
         registrar = findViewById(R.id.txtRegistrar);
         Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
         startActivity(intent);
 
     }
 
-    public void iniciarSesion(View view){
-
-
-        usuario= findViewById(R.id.txtCorreo);
-        contra= findViewById(R.id.txtContrasenia);
-
-
+    public void login(View view){
         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-        //startActivity(intent);
+        if(!user.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
+            switch (checkCredentials(user.getText().toString(), password.getText().toString())) {
+                case "correct":
+                    Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    break;
+                case "wfield":
+                    Toast.makeText(this, "Usuario/Contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    break;
+                case "none":
+                    Toast.makeText(this, "Usuario inexistente", Toast.LENGTH_SHORT).show();
+            }
+        }else
+            Toast.makeText(this, "Completar todos los campos", Toast.LENGTH_SHORT).show();
 
-        switch (login(usuario.getText().toString(),contra.getText().toString())){
-
-            case "correcto":
-                startActivity(intent);
-                break;
-
-            case "usuario":
-                Toast toast=Toast.makeText(this,"Usuario incorrecto",Toast.LENGTH_SHORT);
-                toast.show();
-
-                break;
-
-            case "contrasena":
-                Toast toast2=Toast.makeText(this,"Contraseña incorrecta",Toast.LENGTH_SHORT);
-toast2.show();
-                break;
-
-        }
-
-
-
-
-
-    }
+    }//login
 }

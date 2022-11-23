@@ -2,6 +2,9 @@ package com.example.reposteria_angeles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +19,11 @@ import java.io.OutputStreamWriter;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    EditText usuario;
-    EditText contra;
-    EditText nombre;
-    Button registrar;
+    EditText user;
+    EditText password;
+    EditText name;
+    Button signIn;
+    ControladorBD admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,57 +31,37 @@ public class RegistroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
 
-        usuario=findViewById(R.id.txtCorreo);
-        contra=findViewById(R.id.txtContrasenia);
-        nombre=findViewById(R.id.txtNombreRegistro);
-        registrar=findViewById(R.id.btnregistrar);
+        user=findViewById(R.id.txtCorreo);
+        password=findViewById(R.id.txtContrasenia);
+        name=findViewById(R.id.txtNombreRegistro);
+        signIn=findViewById(R.id.btnregistrar);
+        admin = new ControladorBD(this);
 
-        registrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String user=usuario.getText().toString();
-                String contrasena=contra.getText().toString();
-                String nombr=nombre.getText().toString();
-                if(user.isEmpty()||contrasena.isEmpty()||nombr.isEmpty()){
-                    Toast.makeText(RegistroActivity.this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                try {
-                    InputStreamReader archivo = new InputStreamReader(openFileInput("usuarios.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    while (linea != null) {
-                        String [] split=linea.split("-");
-                        Log.d("DATA",split.toString());
-                        if(split[0].equals(user)){
-                            Toast.makeText(getApplicationContext(),"El usurio ya existe",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        linea = br.readLine();
-                    }
-                    br.close();
-                    archivo.close();
-
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(openFileOutput("usuarios.txt", MainActivity.MODE_APPEND));
-                    archivo2.write(""+user+"-"+contrasena+"-"+nombr+"/admin \n");
-                    archivo2.flush();
-                    archivo2.close();
-
-                    Toast.makeText(getApplicationContext(),"Se registro correctamente",Toast.LENGTH_LONG).show();
-                    finish();
-
-
-                }catch(IOException e){
-                    Toast.makeText(getApplicationContext(),"Ocurrio un error"+e.toString(),Toast.LENGTH_LONG).show();
-                }
-
-
+        //onClick
+        signIn.setOnClickListener(view -> {
+            SQLiteDatabase db = admin.getWritableDatabase();
+            String usr=user.getText().toString();
+            String pass=password.getText().toString();
+            String nam=name.getText().toString();
+            if(usr.isEmpty()||pass.isEmpty()||nam.isEmpty()){
+                Toast.makeText(RegistroActivity.this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
+            Boolean checkuser = admin.userCheckUserName(usr);
+            if(!checkuser) {
+                Boolean insert = admin.userInsertData(usr, nam, pass);
+                if(insert){
+                    Toast.makeText(this, "¡Registrado satisfactoriamente!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }else{
+                    Toast.makeText(this, "¡Registro fallido!", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(this, "Este correo ya ha sido registrado anteriormente", Toast.LENGTH_LONG).show();
+            }
+
+
+        });//setOnClickListener
 
 
     }

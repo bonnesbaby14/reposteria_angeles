@@ -22,7 +22,7 @@ public class ListaClientes extends AppCompatActivity {
         setContentView(R.layout.activity_lista_clientes);
 
         etListado = (TextView) findViewById(R.id.txtDetalle);
-        admin = new ControladorBD(this, "reposteria.db", null, 1);
+        admin = new ControladorBD(this);
         SQLiteDatabase bd = admin.getReadableDatabase();
         Cursor registros = bd.rawQuery("select * from cliente", null);
 

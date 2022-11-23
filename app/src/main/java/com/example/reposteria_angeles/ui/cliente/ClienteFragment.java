@@ -45,7 +45,7 @@ public class ClienteFragment extends Fragment {
                                  ViewGroup container, Bundle savedInstanceState) {
 
             //Inicializar controlador
-            cliente = new ControladorBD(this.getContext(),"reposteria.db",null, 1);
+            cliente = new ControladorBD(this.getContext());
 
             binding = FragmentClienteBinding.inflate(inflater, container, false);
             View root = binding.getRoot();
