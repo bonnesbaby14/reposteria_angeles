@@ -24,6 +24,7 @@
     <string name="fecha_inicio">Fecha inicio</string>
     <string name="fecha_final">Fecha final</string>
     <string name="descripcion">Descripción</string>
+    <string name="productCode">Código</string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

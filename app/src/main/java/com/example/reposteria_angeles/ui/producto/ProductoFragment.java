@@ -1,235 +1,171 @@
 package com.example.reposteria_angeles.ui.producto;
 
 import android.app.DatePickerDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.pdf.PdfDocument;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.TextPaint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 //import com.example.reposteria_angeles.databinding.FragmentHomeBinding;
 
-import com.example.reposteria_angeles.MainActivity;
+import com.example.reposteria_angeles.ControladorBD;
 import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 import com.example.reposteria_angeles.R;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ProductoFragment extends Fragment {
 
     private FragmentProductoBinding binding;
-    EditText nombre;
-    EditText caducidad;
-    EditText cantidad;
-    EditText precio;
-    EditText descripcion;
-    ImageButton agregar, editar, eliminar;
-    private int dia, mes, anio;
-
-    Spinner spinner;
-    ArrayList<String> productos;
-    String puntero;
+    EditText name;
+    EditText date;
+    EditText quantity;
+    EditText price;
+    EditText description;
+    EditText productId;
+    ImageButton add, edit, delete, search, scan, list;
+    String expiration;
+    ControladorBD admin;
+    private int day, month, year;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        productos = new ArrayList<String>();
         binding = FragmentProductoBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
-        nombre = root.findViewById(R.id.txtNombre);
-        caducidad = root.findViewById(R.id.txtCaduccidad);
-        cantidad = root.findViewById(R.id.txtCantidad);
-        precio = root.findViewById(R.id.txtPrecio);
-        descripcion = root.findViewById(R.id.txtDescripcion);
-        spinner = root.findViewById(R.id.spBuscarProducto);
+        name = root.findViewById(R.id.txtNombre);
+        date = root.findViewById(R.id.txtCaduccidad);
+        quantity = root.findViewById(R.id.txtCantidad);
+        price = root.findViewById(R.id.txtPrecio);
+        description = root.findViewById(R.id.txtDescripcion);
+        productId = root.findViewById(R.id.txtBuscarProducto);
         ProductoViewModel productoViewModel =
                 new ViewModelProvider(this).get(ProductoViewModel.class);
+        admin  = new ControladorBD(root.getContext());
 
 
-        agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
-        editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
-        eliminar=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
+        add = (ImageButton) root.findViewById(R.id.btnAgregarP);
+        edit = (ImageButton) root.findViewById(R.id.btnEditarProducto);
+        delete=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
+        search = (ImageButton) root.findViewById(R.id.btnSearchProduct);
+        scan = (ImageButton) root.findViewById(R.id.btnScan);
+        list = (ImageButton) root.findViewById(R.id.btnList);
 
 
-        caducidad.setOnClickListener(new View.OnClickListener() {
+        date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
-                dia = c.get(Calendar.DAY_OF_MONTH);
-                mes = c.get(Calendar.MONTH);
-                anio = c.get(Calendar.YEAR);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                month = c.get(Calendar.MONTH);
+                year = c.get(Calendar.YEAR);
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        caducidad.setText(i2+"/"+(i1+1)+"/"+i);
+                        date.setText(i2+"/"+(i1+1)+"/"+i);
+                        expiration = i +"-" + (i1 + 1) +"-"+i2;
                     }
-                },anio,mes,dia);
+                },year,month,day);
                 datePickerDialog.show();
             }
         });
 
-        editar.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    boolean editado = false;
-                    while (linea != null) {
-                        if (linea.equals(puntero)) {
-                            String[] aux = linea.split("-");
-                            aux[0] = nombre.getText().toString();
-                            aux[1] = cantidad.getText().toString();
-                            aux[2] = precio.getText().toString();
-                            aux[3] = caducidad.getText().toString().replace("/","/");
-                            aux[4] = descripcion.getText().toString();
-                            String resultado = aux[0] + "-" + aux[1] + "-" + aux[2] + "-" + aux[3] + "-" + aux[4] + "\n";
-                            todo = todo + resultado;
-                            editado = true;
-
-                        } else {
-                            todo = todo + linea + "\n";
-                        }
-
-
-                        linea = br.readLine();
+                if(productId.getText().toString().isEmpty() || name.getText().toString().isEmpty() || date.getText().toString().isEmpty()
+                    || quantity.getText().toString().isEmpty() || price.getText().toString().isEmpty() || description.getText().toString().isEmpty()){
+                    Toast.makeText(root.getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (admin.productCheckCode(productId.getText().toString())) {
+                    if(admin.productUpdateData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),expiration,description.getText().toString())){
+                        Toast.makeText(root.getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(root.getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
                     }
 
-                    br.close();
-                    archivo.close();
-
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
-                    if(editado)
-                        Toast.makeText(getContext(), "Producto editado", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Seleccione producto", Toast.LENGTH_LONG).show();
-
-                    nombre.setText("");
-                    caducidad.setText("");
-                    cantidad.setText("");
-                    precio.setText("");
-                    caducidad.setText("");
-                    descripcion.setText(" ");
-                    recargarProductos();
-                } catch (IOException e) {
-
+                }else{
+                    Toast.makeText(root.getContext(), "Producto no encontrado", Toast.LENGTH_SHORT).show();
                 }
+                cleanComponents();
 
+            }//onclick
+        });//edit
 
-            }
-        });
-
-        agregar.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(nombre.getText().toString().isEmpty()||cantidad.getText().toString().isEmpty()||
-                        precio.getText().toString().isEmpty()||caducidad.getText().toString().isEmpty()||
-                        descripcion.getText().toString().isEmpty()){
-                    Toast.makeText(getContext(), "Llene los campos", Toast.LENGTH_LONG).show();
-
-                }else {
-                    String caduc = caducidad.getText().toString().replace("/","/");
-
-                    grabar(nombre.getText().toString(), cantidad.getText().toString(), precio.getText().toString(), caduc, descripcion.getText().toString());
-
-                    nombre.setText("");
-                    caducidad.setText("");
-                    cantidad.setText("");
-                    precio.setText("");
-                    caducidad.setText("");
-                    descripcion.setText(" ");
-                    recargarProductos();
-                    Toast tost = Toast.makeText(getContext(), "Producto Guardado", Toast.LENGTH_LONG);
-                    tost.show();
-                }
-            }
-        });
-
-        eliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                try {
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    boolean eliminado = false;
-                    while (linea != null) {
-                        if (linea.equals(puntero)) {
-                            eliminado  = true;
-                        } else {
-                            todo = todo + linea + "\n";
-                        }
-
-
-                        linea = br.readLine();
+                if(productId.getText().toString().isEmpty() || name.getText().toString().isEmpty() || date.getText().toString().isEmpty()
+                        || quantity.getText().toString().isEmpty() || price.getText().toString().isEmpty() || description.getText().toString().isEmpty()){
+                    Toast.makeText(root.getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(!admin.productCheckCode(productId.getText().toString())){
+                    String[] dateAux = date.getText().toString().split("/");
+                    String dateExp = dateAux[2] + "-" + dateAux[1] + "-" + dateAux[0];
+                    if(admin.productInsertData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),dateExp,description.getText().toString())){
+                        Toast.makeText(root.getContext(), "Producto registrado con éxito", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(root.getContext(), "Error al registrar producto", Toast.LENGTH_SHORT).show();
                     }
-
-                    br.close();
-                    archivo.close();
-
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
-                    if(eliminado)
-                        Toast.makeText(getContext(), "Producto eliminado", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Seleccione producto", Toast.LENGTH_LONG).show();
-
-
-                    nombre.setText("");
-                    caducidad.setText("");
-                    cantidad.setText("");
-                    precio.setText("");
-                    caducidad.setText("");
-                    descripcion.setText(" ");
-                    recargarProductos();
-                } catch (IOException e) {
-
+                }else{
+                    Toast.makeText(root.getContext(), "Código de producto ya registrado anteriormente", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+                cleanComponents();
+            }//onCLick
+        });//add
 
-        recargarProductos();
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(productId.getText().toString().isEmpty()){
+                    Toast.makeText(root.getContext(), "Ingresa el código del producto a eliminar", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if(!admin.productCheckCode(productId.getText().toString())){
+                    Toast.makeText(root.getContext(), "No existe el producto", Toast.LENGTH_SHORT).show();
+                }else if(admin.productDeleteData(productId.getText().toString())){
+                    Toast.makeText(root.getContext(), "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(root.getContext(), "Error al eliminar producto", Toast.LENGTH_SHORT).show();
+                }
+                cleanComponents();
+            }//onClick
+        });//delete
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchProduct();
+            }//onClick
+        });//search
+
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+                intentIntegrator.setPrompt("Lector de Códigos");
+                intentIntegrator.setCameraId(0);
+                intentIntegrator.setBeepEnabled(true);
+                intentIntegrator.setBarcodeImageEnabled(true);
+                intentIntegrator.initiateScan();
+            }//onClick
+        });//scan
         return root;
     }
 
@@ -240,85 +176,59 @@ public class ProductoFragment extends Fragment {
     }
 
 
-    public void grabar(String nombre, String cantidad, String precio, String fecha, String descipcion) {
-        try {
-            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("productos.txt", MainActivity.MODE_APPEND));
-            archivo.write(nombre + "-" + cantidad + "-" + precio + "-" + fecha + "-" + descipcion + "\n");
-            archivo.flush();
-            archivo.close();
-
-        } catch (IOException e) {
-        }
-
-
+    private void cleanComponents(){
+        name.setText("");
+        date.setText("");
+        quantity.setText("");
+        price.setText("");
+        description.setText("");
+        productId.setText("");
+        productId.requestFocus();
     }
-
-    public void recargarProductos() {
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
-            if (archivo == null) {
-
-                grabar("producto", "100", "10", "00/00/0000", "productoDescripcion");
-            } else {
-
-                BufferedReader br = new BufferedReader(archivo);
-                String linea = br.readLine();
-                String todo = "";
-                productos.clear();
-                productos.add("Selecciona...");
-                while (linea != null) {
-                    String[] split = linea.split("-");
-                    Log.d("DATA", split.toString());
-                    productos.add(linea);
-                    linea = br.readLine();
-                }
-                br.close();
-                archivo.close();
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, productos);
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(arrayAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] producto = parent.getItemAtPosition(position).toString().split("-");
-                        if (producto.length > 1) {
-                            puntero = parent.getItemAtPosition(position).toString();
-
-                            nombre.setText(producto[0].toString());
-                            cantidad.setText(producto[1].toString());
-                            precio.setText(producto[2].toString());
-                            caducidad.setText(producto[3].toString().replace("-","/"));
-                            descripcion.setText(producto[4].toString());
-                        }
-                        if(spinner.getSelectedItem().toString()=="Selecciona..."){
-                            nombre.setText("");
-                            caducidad.setText("");
-                            cantidad.setText("");
-                            precio.setText("");
-                            caducidad.setText("");
-                            descripcion.setText(" ");
-                            puntero = "";
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+    private void searchProduct(){
+        if(productId.getText().toString().isEmpty()){
+            Toast.makeText(getContext(), "Ingresae código a buscar", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(admin.productCheckCode(productId.getText().toString())){
+            SQLiteDatabase MyBD = admin.getReadableDatabase();
+            Cursor raw = MyBD.rawQuery("select productName, productQty, productPrice, productDate, productDescrip from product where productId=?",new String[]{productId.getText().toString()});
+            if(raw.moveToFirst()){
+                name.setText(raw.getString(0));
+                quantity.setText(raw.getString(1));
+                price.setText(raw.getString(2));
+                String[] dateAux = raw.getString(3).split("-");
+                date.setText(dateAux[2]+"/"+dateAux[1]+"/"+dateAux[0]);
+                description.setText(raw.getString(4));
+                MyBD.close();
+            }else{
+                Toast.makeText(getContext(), "Error al buscar producto", Toast.LENGTH_SHORT).show();
             }
-        } catch (IOException e) {
-            Log.d("archivo", e.toString());
+        }else{
+            Toast.makeText(getContext(), "Producto no encontrado", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-            grabar("producto", "100", "10", "00/00/0000", "productoDescripcion");
-            Toast tost = Toast.makeText(getContext(), "Se creo el archivo productos", Toast.LENGTH_SHORT);
-            tost.show();
-            recargarProductos();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if(intentResult != null ){
+            if(intentResult.getContents() == null){
+                Toast.makeText(getContext(), "Lectura cancelada.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Datos leídos.", Toast.LENGTH_SHORT).show();
+                productId.setText(intentResult.getContents());
+                if(admin.productCheckCode(productId.getText().toString())){
+                    searchProduct();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+
         }
     }
 
 
 
-}
+}//fragment
