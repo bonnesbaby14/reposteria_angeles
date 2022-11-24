@@ -19,8 +19,8 @@ public class ControladorBD extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase nombreBD) {
 //Query sql
         String sqlClient = "create table cliente (identificador int primary key, nombre text, direccion text, telefono text, preferencia text)";
-        String sqlUsers = "create table users (userId int primary key unique, userEmail text unique,userName text, userPassword text)";
-        String sqlProduct = "create table product (productId int primary key unique, productName text, productQty int, productPrice real,productDate date, productDescrip text)";
+        String sqlUsers = "create table users (userId integer primary key unique, userEmail text unique,userName text, userPassword text)";
+        String sqlProduct = "create table product (productId text primary key unique, productName text, productQty int, productPrice real,productDate text, productDescrip text)";
 
         //admin user
         ContentValues admin = new ContentValues();

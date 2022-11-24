@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view){
         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
         if(!user.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-            switch (checkCredentials(user.getText().toString(), password.getText().toString())) {
+            switch (checkCredentials(user.getText().toString().trim(), password.getText().toString())) {
                 case "correct":
                     Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
                     startActivity(intent);

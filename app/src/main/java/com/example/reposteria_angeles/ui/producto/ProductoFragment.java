@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
 import androidx.annotation.Nullable;
@@ -22,10 +23,14 @@ import androidx.lifecycle.ViewModelProvider;
 //import com.example.reposteria_angeles.databinding.FragmentHomeBinding;
 
 import com.example.reposteria_angeles.ControladorBD;
+import com.example.reposteria_angeles.ProductsList;
 import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 import com.example.reposteria_angeles.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.CaptureActivity;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.Calendar;
 
@@ -79,7 +84,6 @@ public class ProductoFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         date.setText(i2+"/"+(i1+1)+"/"+i);
-                        expiration = i +"-" + (i1 + 1) +"-"+i2;
                     }
                 },year,month,day);
                 datePickerDialog.show();
@@ -94,7 +98,7 @@ public class ProductoFragment extends Fragment {
                     Toast.makeText(root.getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
                     return;
                 }else if (admin.productCheckCode(productId.getText().toString())) {
-                    if(admin.productUpdateData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),expiration,description.getText().toString())){
+                    if(admin.productUpdateData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),date.getText().toString().replace("/","-"),description.getText().toString())){
                         Toast.makeText(root.getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(root.getContext(), "Error al actualizar", Toast.LENGTH_SHORT).show();
@@ -116,9 +120,8 @@ public class ProductoFragment extends Fragment {
                     Toast.makeText(root.getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
                     return;
                 } else if(!admin.productCheckCode(productId.getText().toString())){
-                    String[] dateAux = date.getText().toString().split("/");
-                    String dateExp = dateAux[2] + "-" + dateAux[1] + "-" + dateAux[0];
-                    if(admin.productInsertData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),dateExp,description.getText().toString())){
+                    String dateAux = date.getText().toString().replace("/","-");
+                    if(admin.productInsertData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),dateAux,description.getText().toString())){
                         Toast.makeText(root.getContext(), "Producto registrado con éxito", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(root.getContext(), "Error al registrar producto", Toast.LENGTH_SHORT).show();
@@ -157,17 +160,19 @@ public class ProductoFragment extends Fragment {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-                intentIntegrator.setPrompt("Lector de Códigos");
-                intentIntegrator.setCameraId(0);
-                intentIntegrator.setBeepEnabled(true);
-                intentIntegrator.setBarcodeImageEnabled(true);
-                intentIntegrator.initiateScan();
+                scanCode();
             }//onClick
         });//scan
+
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductoFragment.this.getContext(), ProductsList.class);
+                startActivity(intent);
+            }
+        });//list
         return root;
-    }
+    }//onCreateView
 
     @Override
     public void onDestroyView() {
@@ -197,8 +202,8 @@ public class ProductoFragment extends Fragment {
                 name.setText(raw.getString(0));
                 quantity.setText(raw.getString(1));
                 price.setText(raw.getString(2));
-                String[] dateAux = raw.getString(3).split("-");
-                date.setText(dateAux[2]+"/"+dateAux[1]+"/"+dateAux[0]);
+                String dateAux = raw.getString(3).replace("-","/");
+                date.setText(dateAux);
                 description.setText(raw.getString(4));
                 MyBD.close();
             }else{
@@ -209,26 +214,27 @@ public class ProductoFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-        if(intentResult != null ){
-            if(intentResult.getContents() == null){
-                Toast.makeText(getContext(), "Lectura cancelada.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Datos leídos.", Toast.LENGTH_SHORT).show();
-                productId.setText(intentResult.getContents());
-                if(admin.productCheckCode(productId.getText().toString())){
-                    searchProduct();
-                }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+    private void scanCode(){
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Subir volumen para activar flash");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        barLauncher.launch(options);
+    }//scanCode
+
+    ActivityResultLauncher<ScanOptions> barLauncher =  registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null){
+            Toast.makeText(getContext(), "Datos leídos.", Toast.LENGTH_SHORT).show();
+            productId.setText(result.getContents());
+            if(admin.productCheckCode(result.getContents()))
+                searchProduct();
+        }else{
+            Toast.makeText(getContext(), "Lectura cancelada.", Toast.LENGTH_SHORT).show();
 
         }
-    }
-
+    } );
 
 
 }//fragment
