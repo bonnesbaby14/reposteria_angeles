@@ -23,7 +23,7 @@ public class ControladorBD extends SQLiteOpenHelper {
         String sqlUsers = "create table users (userId int primary key unique, userEmail text unique,userName text, userPassword text)";
         String sqlProduct = "create table product (productId int primary key unique, productName text, productQty int, productPrice real,productDate date, productDescrip text)";
         String sqlExpense = "create table expense (expenseId int primary key unique, productNameExpense text, expenseName text, expenseCost real, expenseNumber int, expenseDescripcion text)";
-
+        String sqlIngreso = "create table ingreso (ingresoId int primary key unique, cliente text, productos text, productosVendidos int, nombreVenta text, ventaTotal real, descripcionVenta text)";
         //admin user
         ContentValues admin = new ContentValues();
         admin.put("userId",1);
@@ -36,6 +36,7 @@ public class ControladorBD extends SQLiteOpenHelper {
             nombreBD.execSQL(sqlUsers);
             nombreBD.execSQL(sqlProduct);
             nombreBD.execSQL(sqlExpense);
+            nombreBD.execSQL(sqlIngreso);
 
             nombreBD.insert("users",null,admin);
 

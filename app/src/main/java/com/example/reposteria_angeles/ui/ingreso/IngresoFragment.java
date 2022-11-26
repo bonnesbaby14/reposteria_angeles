@@ -1,5 +1,11 @@
 package com.example.reposteria_angeles.ui.ingreso;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -18,9 +25,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.reposteria_angeles.ControladorBD;
+import com.example.reposteria_angeles.ListaGasto;
+import com.example.reposteria_angeles.ListaIngreso;
 import com.example.reposteria_angeles.MainActivity;
 import com.example.reposteria_angeles.R;
 import com.example.reposteria_angeles.databinding.FragmentIngresoBinding;
+import com.example.reposteria_angeles.ui.gasto.GastoFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,11 +45,12 @@ public class IngresoFragment extends Fragment {
     //private FragmentIngresoBinding binding;
     private FragmentIngresoBinding binding;
     Spinner buscarVenta, buscarCliente, buscarProducto;
-    EditText ventaTotal, nombreVenta, productVendido, descripcion;
-    ImageButton agregar, editar, eliminar;
+    EditText ventaTotal, nombreVenta, productVendido, descripcion, identificador;
+    ImageButton agregar, editar, eliminar, buscar, clean, ver;
     ArrayList<String> ventas, clientes, productos;
     ArrayAdapter<String> adapterCliente, adapterProducto;
     String puntero;
+    ControladorBD ingreso;
     private int dia, mes, anio;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,12 +62,10 @@ public class IngresoFragment extends Fragment {
         clientes = new ArrayList<String>();
         productos = new ArrayList<String>();
 
-
-
         binding = FragmentIngresoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         //Vinculacion con componentes
-        buscarVenta = root.findViewById(R.id.spBuscarVenta);
+        identificador = root.findViewById(R.id.txtIdentificadorV);
         buscarCliente = root.findViewById(R.id.spBuscarCliente);
         buscarProducto = root.findViewById(R.id.spBuscarProductoGasto);
 
@@ -64,167 +74,220 @@ public class IngresoFragment extends Fragment {
         productVendido = root.findViewById(R.id.txtPrecio);
         descripcion = root.findViewById(R.id.txtCaduccidad);
 
-        IngresoViewModel ingresoViewModel1 =
-                new ViewModelProvider(this).get(IngresoViewModel.class);
+        agregar = root.findViewById(R.id.btnAgregarI);
+        editar = root.findViewById(R.id.btnEditarI);
+        eliminar = root.findViewById(R.id.btnEliminarI);
+        buscar = root.findViewById(R.id.btnBuscarI);
+        ver = root.findViewById(R.id.btnVerI);
+        clean = root.findViewById(R.id.btnCleanI);
 
-        agregar = root.findViewById(R.id.btnAgregarG);
-        editar = root.findViewById(R.id.btnEditarG);
-        eliminar = root.findViewById(R.id.btnEliminarG);
         //llenado de spinner
-        clientes = llenarSpinner(clientes,buscarCliente,"clientes.txt");
-        productos = llenarSpinner(productos,buscarProducto,"productos.txt");
-        adapterCliente= new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, clientes);
-        adapterProducto = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,productos);
+        ingreso = new ControladorBD(this.getContext());
+        llenarProductos();
+        llenarClientes();
 
 
         //Acciones de los botones
 
+        buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabase bd = ingreso.getReadableDatabase();
+
+
+                String identificadorI = identificador.getText().toString();
+
+                if( !identificadorI.isEmpty() ){
+
+                    Cursor fila = bd.rawQuery("select cliente, productos, productosVendidos, nombreVenta, ventaTotal, descripcionVenta from ingreso " +
+                            "where ingresoId="+identificadorI, null);
+
+                    if (fila.moveToFirst()){
+                        int numero = buscarNumeroProducto(fila.getString(1));
+                        buscarProducto.setSelection(numero);
+                        numero = buscarNumeroCliente(fila.getString(0));
+                        buscarCliente.setSelection(numero);
+
+                        productVendido.setText(fila.getString(2));
+                        nombreVenta.setText(fila.getString(3));
+                        ventaTotal.setText(fila.getString(4));
+                        descripcion.setText(fila.getString(5));
+
+                        bd.close();
+                    } else {
+                        Toast.makeText(IngresoFragment.this.getContext(),"Identificador de ingreso no existe.",Toast.LENGTH_SHORT).show();
+                        identificador.setText("");
+                        identificador.requestFocus();
+                        bd.close();
+                    }//else-if fila
+                } else {
+                    Toast.makeText(IngresoFragment.this.getContext(),"Ingresa identificador de ingreso",Toast.LENGTH_SHORT).show();
+                    identificador.requestFocus();
+                }//else
+            }
+        });
+
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(buscarCliente.getSelectedItem().toString().equals("Selecciona...")||buscarProducto.getSelectedItem().toString().equals("Selecciona...")||
-                   ventaTotal.getText().toString().isEmpty()||nombreVenta.getText().toString().isEmpty()||productVendido.getText().toString().isEmpty()||
-                    descripcion.getText().toString().isEmpty()){
-                    Toast.makeText(getContext(), "Llene todos los campos", Toast.LENGTH_LONG).show();
-                }else {
-                    grabar(buscarCliente.getSelectedItem().toString(), buscarProducto.getSelectedItem().toString(),
-                            ventaTotal.getText().toString(), nombreVenta.getText().toString(),
-                            productVendido.getText().toString(), descripcion.getText().toString());
-                    buscarCliente.setSelection(0);
-                    buscarProducto.setSelection(0);
+                if(buscarProducto.getSelectedItem()==""|| identificador.getText().toString().isEmpty()
+                        ||buscarCliente.getSelectedItem()==""|| ventaTotal.getText().toString().isEmpty()||
+                        nombreVenta.getText().toString().isEmpty() || productVendido.getText().toString().isEmpty()
+                        || descripcion.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Por favor llenar todos los campos.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    SQLiteDatabase bd = ingreso.getWritableDatabase();
+
+                    String producto = buscarProducto.getSelectedItem().toString();
+                    String identificadorI =  identificador.getText().toString();
+                    String cliente = buscarCliente.getSelectedItem().toString();
+                    String venta = ventaTotal.getText().toString();
+                    String nombreV = nombreVenta.getText().toString();
+                    String productoV = productVendido.getText().toString();
+                    String descripcionV = descripcion.getText().toString();
+
+
+                    ContentValues registro = new ContentValues();
+
+                    registro.put("ingresoId", identificadorI);
+                    registro.put("cliente", cliente);
+                    registro.put("productos", producto);
+                    registro.put("productosVendidos", productoV);
+                    registro.put("nombreVenta", nombreV);
+                    registro.put("ventaTotal", venta);
+                    registro.put("descripcionVenta", descripcionV);
+
+
+                    if (bd != null) {
+
+                        long x = 0;
+                        try {
+                            x = bd.insert("ingreso", null, registro);
+                        } catch (SQLException e) {
+                            Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                        }
+
+                        bd.close();
+                    }
+
+                    identificador.setText("");
                     ventaTotal.setText("");
                     nombreVenta.setText("");
                     productVendido.setText("");
                     descripcion.setText("");
-                    recargarIngresos();
-                    Toast.makeText(getContext(), "Ingreso guardado", Toast.LENGTH_LONG).show();
+                    identificador.requestFocus();
+
+                    Toast.makeText(IngresoFragment.this.getContext(), "¡Ingreso registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
                 }
             }//onClick
         });//agregar
 
+        clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                identificador.setText("");
+                ventaTotal.setText("");
+                nombreVenta.setText("");
+                productVendido.setText("");
+                descripcion.setText("");
+                identificador.requestFocus();
+            }
+        });
+
+        ver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(IngresoFragment.this.getContext(), ListaIngreso.class);
+                startActivity(intent);
+            }
+        });//Ver
+
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("ingresos.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    boolean editar = false;
-                    while(linea!=null){
-                        if(linea.equals(puntero)){
-                            String[] aux = linea.split("-");
-                            aux[0] = buscarCliente.getSelectedItem().toString();
-                            aux[1] = buscarProducto.getSelectedItem().toString();
-                            aux[2] = ventaTotal.getText().toString();
-                            aux[3] = nombreVenta.getText().toString();
-                            aux[4] = productVendido.getText().toString();
-                            aux[5] = descripcion.getText().toString();
-                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4]
-                                    +"-"+aux[5]+"-"+aux[6]+"\n";
-                            todo+=resultado;
-                            editar = true;
-                        }else{
-                            todo = todo + linea +"\n";
-                        }
-                        linea = br.readLine();
-                    }//while
-                    br.close();
-                    archivo.close();
+                if(buscarProducto.getSelectedItem()==""|| identificador.getText().toString().isEmpty()
+                        ||buscarCliente.getSelectedItem()==""|| ventaTotal.getText().toString().isEmpty()||
+                        nombreVenta.getText().toString().isEmpty() || productVendido.getText().toString().isEmpty()
+                        || descripcion.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Por favor llenar todos los campos.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    SQLiteDatabase bd = ingreso.getWritableDatabase();
 
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("ingresos.txt",MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
-                    if(editar)
-                        Toast.makeText(getContext(), "Ingreso editado", Toast.LENGTH_LONG).show();
+                    String producto = buscarProducto.getSelectedItem().toString();
+                    String identificadorI =  identificador.getText().toString();
+                    String cliente = buscarCliente.getSelectedItem().toString();
+                    String venta = ventaTotal.getText().toString();
+                    String nombreV = nombreVenta.getText().toString();
+                    String productoV = productVendido.getText().toString();
+                    String descripcionV = descripcion.getText().toString();
+
+
+                    ContentValues registro = new ContentValues();
+
+                    registro.put("ingresoId", identificadorI);
+                    registro.put("cliente", cliente);
+                    registro.put("productos", producto);
+                    registro.put("productosVendidos", productoV);
+                    registro.put("nombreVenta", nombreV);
+                    registro.put("ventaTotal", venta);
+                    registro.put("descripcionVenta", descripcionV);
+
+                    int cantidad=0;
+
+                    cantidad = bd.update("ingreso",registro,"ingresoId="+identificadorI,null);
+
+                    bd.close();
+                    if( cantidad > 0)
+                        Toast.makeText(IngresoFragment.this.getContext(),"Datos del ingreso actualizados.",Toast.LENGTH_SHORT).show();
                     else
-                        Toast.makeText(getContext(), "Seleccione venta", Toast.LENGTH_LONG).show();
-                    //Limpieza de componentes
-                    buscarCliente.setSelection(0);
-                    buscarProducto.setSelection(0);
+                        Toast.makeText(IngresoFragment.this.getContext(),"El identificador del ingreso no existe.",Toast.LENGTH_SHORT).show();
+
+                    identificador.setText("");
                     ventaTotal.setText("");
                     nombreVenta.setText("");
                     productVendido.setText("");
                     descripcion.setText("");
-                    recargarIngresos();
-
-                }catch (IOException ex){
-
-                }//catch
+                    identificador.requestFocus();
+                }
             }//onClick
         });//editar
 
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("ingresos.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    boolean eliminado = false;
-                    while(linea!=null){
-                        if(linea.equals(puntero)){
-                            eliminado = true;
-                        }else{
-                            todo = todo + linea +"\n";
-                        }//else{
-                        linea  = br.readLine();
-                    }//while
+                SQLiteDatabase bd = ingreso.getWritableDatabase();
 
-                    br.close();
-                    archivo.close();
+                String id = identificador.getText().toString();
 
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("ingresos.txt", MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
+                if( !id.isEmpty()){
 
-                    if(eliminado)
-                        Toast.makeText(getContext(), "Ingreso eliminado", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Seleccione venta", Toast.LENGTH_LONG).show();
+                    int cantidad=0;
 
-                    //Limpieza de componentes
-                    buscarCliente.setSelection(0);
-                    buscarProducto.setSelection(0);
+                    cantidad = bd.delete("ingreso","ingresoId = "+id, null);
+
+                    bd.close();
+
+                    identificador.setText("");
                     ventaTotal.setText("");
                     nombreVenta.setText("");
                     productVendido.setText("");
                     descripcion.setText("");
-                    recargarIngresos();
+                    identificador.requestFocus();
 
-                }catch (IOException ex){
-
-                }//catch
+                    if( cantidad > 0)
+                        Toast.makeText(IngresoFragment.this.getContext(),"Ingreso eliminado.",Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(IngresoFragment.this.getContext(),"El identificador del ingreso no existe.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(IngresoFragment.this.getContext(),"Ingresa identificador del ingreso",Toast.LENGTH_SHORT).show();
+                }//else
             }//onClick
         });//eliminar
-        eventoNumProducto();
-        buscarProducto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int costo = obtenerPrecioProducto(parent.getItemAtPosition(position).toString());
-                int num = 0;
-                try {
-                    num = Integer.parseInt(productVendido.getText().toString());
-                }catch (Exception e){
-
-                }
-                int total = costo * num;
-                ventaTotal.setText(String.valueOf(total));
-                ventaTotal.setEnabled(false);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
 
-       // final TextView textView = binding.textGallery;
-       // gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        recargarIngresos();
+
         return root;
     }//onCreate
 
@@ -233,165 +296,128 @@ public class IngresoFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    public void grabar(String cliente, String producto, String ventaTotal,
-                       String nombreVenta, String productVendido, String descripcion){
-        try {
-            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("ingresos.txt", MainActivity.MODE_APPEND));
-            //FECHA DE GUARDADO
-            Calendar cal = Calendar.getInstance();
-            dia = cal.get(Calendar.DAY_OF_MONTH);
-            mes = cal.get(Calendar.MONTH);
-            anio = cal.get(Calendar.YEAR);
-            String fecha = dia+"/"+(mes+1)+"/"+anio;
 
-            archivo.write(cliente+"-"+producto+"-"+ventaTotal+"-"+nombreVenta+"-"+productVendido+"-"+descripcion+"-"+fecha+"\n");
-            archivo.flush();
-            archivo.close();
-        }catch (IOException ex){
+    private int buscarNumeroProducto(String string) {
+        int num=0;
+        SQLiteDatabase bd = ingreso.getReadableDatabase();
 
-        }//catch
-    }//grabar
 
-    public void recargarIngresos(){
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("ingresos.txt"));
-            if(archivo==null){
-                grabar("cliente","producto","1000","Venta","18","descripcion");
+        Cursor fila = bd.rawQuery("select productName from product ", null);
 
-            }else{
-                BufferedReader br = new BufferedReader(archivo);
-                String linea = br.readLine();
-                String todo = "";
-                ventas.clear();
-                ventas.add("Selecciona...");
-                while(linea!=null){
-                    String[] split = linea.split("-");
-                    Log.d("DATA",split.toString());
-                    ventas.add(linea);
-                    linea = br.readLine();
-                }//while
-                br.close();
-                archivo.close();
+        int n = fila.getCount();
+        int cont = 0;
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,ventas);
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                buscarVenta.setAdapter(arrayAdapter);
-                buscarVenta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] ingreso = parent.getItemAtPosition(position).toString().split("-");
-                        if(ingreso.length>1){
-                            puntero = parent.getItemAtPosition(position).toString();
-                            //Cliente
-                            int clientPosition = adapterCliente.getPosition(ingreso[0]);
-                            buscarCliente.setSelection(clientPosition);
-                            //Producto
-                            int productPosition = adapterProducto.getPosition(ingreso[1]);
-                            buscarProducto.setSelection(productPosition);
-                            ventaTotal.setText(ingreso[2]);
-                            nombreVenta.setText(ingreso[3]);
-                            productVendido.setText(ingreso[4]);
-                            descripcion.setText(ingreso[5]);
+        if(n>0) {
+            fila.moveToFirst();
+            do {
 
-                        }//if
-                        if(buscarVenta.getSelectedItem().toString().equals("Selecciona...")){
-                            buscarCliente.setSelection(0);
-                            buscarProducto.setSelection(0);
-                            ventaTotal.setText("");
-                            nombreVenta.setText("");
-                            productVendido.setText("");
-                            descripcion.setText("");
-                            puntero = "";
-                        }
-                    }//onItemSelected
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }//onNothingSelected
-                });
-            }//else
-        }catch (IOException ex){
-            grabar("cliente","producto","500","nombreVenta","15","descripcion");
-            Toast.makeText(getContext(), "Se creó el archivo ingresos", Toast.LENGTH_SHORT).show();
-            recargarIngresos();
+                if(fila.getString(0).equals(string)) num = cont;
+                cont++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
         }
-    }//recargarIngresos
 
-    private ArrayList<String> llenarSpinner(ArrayList<String> arrayList,Spinner spinner,String file){
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput(file));
-            if(archivo!=null) {
-                BufferedReader br = new BufferedReader(archivo);
-                String linea = br.readLine();
-                arrayList.clear();
-                arrayList.add("Selecciona...");
-                while (linea!=null){
-                    String[] split = linea.split("-");
-                    arrayList.add(split[0]);
-                    linea = br.readLine();
-                }//while
-                br.close();
-                archivo.close();
-                // se llena el spinner
-                ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-            }//if
-        }catch(IOException ex){
+        bd.close();
+        return num;
+    }
 
-        }//catch
-        return arrayList;
-    }//llenarSpinner
-    private int obtenerPrecioProducto(String producto){
-        int costo = 0;
-        ArrayList<Integer> venta = new ArrayList<Integer>();
+    private int buscarNumeroCliente(String string) {
+        int num=0;
+        SQLiteDatabase bd = ingreso.getReadableDatabase();
 
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("productos.txt"));
-            BufferedReader br = new BufferedReader(archivo);
-            String linea = br.readLine();
 
-            int pos = 0;
-            while (linea != null) {
+        Cursor fila = bd.rawQuery("select nombre from cliente ", null);
 
-                String[] aux = linea.split("-");
-                if(producto.equals(aux[0])){
-                   costo = (int) Integer.parseInt(aux[2]);
-                }
-                linea = br.readLine();
-            }
-            br.close();
-            archivo.close();
-        } catch (IOException e) {
+        int n = fila.getCount();
+        int cont = 0;
 
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+
+                if(fila.getString(0).equals(string)) num = cont;
+                cont++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay clientes registrados", Toast.LENGTH_SHORT).show();
         }
-        return costo;
-    }//obtenerPrecioProducto
-    private void eventoNumProducto(){
-        productVendido.addTextChangedListener(new TextWatcher() {
+
+        bd.close();
+        return num;
+    }
+
+
+    public void llenarProductos(){
+        SQLiteDatabase bd = ingreso.getReadableDatabase();
+
+
+        Cursor fila = bd.rawQuery("select productName from product ", null);
+
+        int n = fila.getCount();
+        int nr = 1;
+
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+                productos.add(fila.getString(0));
+                nr++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, productos){
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                //change the color to which ever you want
+                ((CheckedTextView) view).setTextColor(Color.BLACK);
+                //change the size to which ever you want
 
+                //for using sp values use setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                return view;
             }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buscarProducto.setAdapter(adapter);
+    }
 
+    public void llenarClientes(){
+        SQLiteDatabase bd = ingreso.getReadableDatabase();
+
+
+        Cursor fila = bd.rawQuery("select nombre from cliente", null);
+
+        int n = fila.getCount();
+        int nr = 1;
+
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+                clientes.add(fila.getString(0));
+                nr++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay clientes registrados", Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, clientes){
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                //change the color to which ever you want
+                ((CheckedTextView) view).setTextColor(Color.BLACK);
+                //change the size to which ever you want
 
+                //for using sp values use setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                return view;
             }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buscarCliente.setAdapter(adapter);
+    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                int costo = obtenerPrecioProducto(buscarProducto.getSelectedItem().toString());
-                int num = 0;
-                try {
-                    num = Integer.parseInt(productVendido.getText().toString());
-                }catch (Exception e){
-
-                }
-                int total = costo * num;
-                ventaTotal.setText(String.valueOf(total));
-                ventaTotal.setEnabled(false);
-            }
-        });
-    }//eventoNumProducto
 }//class

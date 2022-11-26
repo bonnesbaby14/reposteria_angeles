@@ -25,19 +25,6 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:drawableLeft="@drawable/buscar"
-                android:text="Encontrar venta"
-                android:textColor="#B20B0B0B"
-                app:layout_constraintBottom_toTopOf="@+id/spBuscarVenta"
-                app:layout_constraintEnd_toEndOf="@+id/spBuscarVenta"
-                app:layout_constraintHorizontal_bias="0.055"
-                app:layout_constraintStart_toStartOf="@+id/spBuscarVenta" />
-
-            <TextView
                 android:id="@+id/txtTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,18 +50,6 @@
 
 
             <Spinner
-                android:id="@+id/spBuscarVenta"
-                android:layout_width="310dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="36dp"
-                android:background="@drawable/edit_text"
-                app:layout_constraintEnd_toEndOf="@+id/txtTitulo"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="@+id/txtTitulo"
-                app:layout_constraintTop_toBottomOf="@+id/imageView"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <Spinner
                 android:id="@+id/spBuscarCliente"
                 android:layout_width="310dp"
                 android:layout_height="48dp"
@@ -83,7 +58,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/txtTitulo"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="@+id/txtTitulo"
-                app:layout_constraintTop_toBottomOf="@+id/spBuscarVenta"
+                app:layout_constraintTop_toBottomOf="@+id/txtIdentificadorV"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <Spinner
@@ -157,6 +132,23 @@
                 app:layout_constraintTop_toBottomOf="@+id/spBuscarProductoGasto" />
 
             <EditText
+                android:id="@+id/txtIdentificadorV"
+                android:layout_width="306dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableLeft="@drawable/ic_baseline_attach_money_24"
+                android:ems="10"
+                android:hint="Identificador ventas"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#81000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <EditText
                 android:id="@+id/txtCantidad"
                 android:layout_width="306dp"
                 android:layout_height="48dp"
@@ -191,44 +183,74 @@
                 app:layout_constraintStart_toStartOf="@+id/spBuscarProductoGasto"
                 app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
 
-            <ImageButton
-                android:id="@+id/btnAgregarG"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="32dp"
-                android:background="#FFFFFF"
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="309dp"
+                android:layout_height="77dp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
-                app:layout_constraintHorizontal_bias="0.023"
                 app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
-                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
-                app:srcCompat="@drawable/ic_baseline_add_24"
-                tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad">
 
-            <ImageButton
-                android:id="@+id/btnEditarG"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
-                app:layout_constraintHorizontal_bias="0.492"
-                app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
-                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
-                app:srcCompat="@drawable/edit"
-                tools:ignore="SpeakableTextPresentCheck" />
+                <ImageButton
+                    android:id="@+id/btnAgregarI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:background="#FFFFFF"
+                    app:srcCompat="@drawable/ic_baseline_add_24"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
-            <ImageButton
-                android:id="@+id/btnEliminarG"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="@+id/txtCaduccidad"
-                app:layout_constraintHorizontal_bias="0.984"
-                app:layout_constraintStart_toStartOf="@+id/txtCaduccidad"
-                app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad"
-                app:srcCompat="@drawable/ic_baseline_delete_24"
-                tools:ignore="SpeakableTextPresentCheck" />
+                <ImageButton
+                    android:id="@+id/btnBuscarI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:background="#FFFFFF"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/buscar"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnEditarI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/edit"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnEliminarI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/ic_baseline_delete_24"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnCleanI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/ic_baseline_cleaning_services_24"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnVerI"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/eyes"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

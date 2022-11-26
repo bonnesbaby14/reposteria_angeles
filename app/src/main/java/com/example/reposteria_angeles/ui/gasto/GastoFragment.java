@@ -342,42 +342,6 @@ public class GastoFragment extends Fragment {
         buscarProducto.setAdapter(adapter);
     }
 
-    public void llenarProductos(String a){
-        SQLiteDatabase bd = gasto.getReadableDatabase();
-
-
-        Cursor fila = bd.rawQuery("select productName from product ", null);
-
-        int n = fila.getCount();
-        int nr = 1;
-
-        if(n>0) {
-            fila.moveToFirst();
-            do {
-                productsList.add(fila.getString(0));
-                nr++;
-            } while (fila.moveToNext());
-        }else{
-            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
-        }
-        bd.close();
-
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, productsList){
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                //change the color to which ever you want
-                ((CheckedTextView) view).setTextColor(Color.BLACK);
-                //change the size to which ever you want
-
-                //for using sp values use setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                return view;
-            }
-        };
-        buscarProducto.setSelection ( productsList.indexOf(a) );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        buscarProducto.setAdapter(adapter);
-    }
 
 
 
