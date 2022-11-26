@@ -59,9 +59,9 @@ public class ProductoFragment extends Fragment {
         admin  = new ControladorBD(root.getContext());
 
 
-        add = (ImageButton) root.findViewById(R.id.btnAgregarP);
-        edit = (ImageButton) root.findViewById(R.id.btnEditarProducto);
-        delete=(ImageButton) root.findViewById(R.id.btnEliminarProducto);
+        add = (ImageButton) root.findViewById(R.id.btnAgregarG);
+        edit = (ImageButton) root.findViewById(R.id.btnEditarG);
+        delete=(ImageButton) root.findViewById(R.id.btnEliminarG);
         search = (ImageButton) root.findViewById(R.id.btnSearchProduct);
         scan = (ImageButton) root.findViewById(R.id.btnScan);
         list = (ImageButton) root.findViewById(R.id.btnList);

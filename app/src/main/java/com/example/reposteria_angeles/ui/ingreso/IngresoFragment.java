@@ -26,10 +26,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class IngresoFragment extends Fragment {
 
@@ -69,9 +67,9 @@ public class IngresoFragment extends Fragment {
         IngresoViewModel ingresoViewModel1 =
                 new ViewModelProvider(this).get(IngresoViewModel.class);
 
-        agregar = root.findViewById(R.id.btnAgregarP);
-        editar = root.findViewById(R.id.btnEditarProducto);
-        eliminar = root.findViewById(R.id.btnEliminarProducto);
+        agregar = root.findViewById(R.id.btnAgregarG);
+        editar = root.findViewById(R.id.btnEditarG);
+        eliminar = root.findViewById(R.id.btnEliminarG);
         //llenado de spinner
         clientes = llenarSpinner(clientes,buscarCliente,"clientes.txt");
         productos = llenarSpinner(productos,buscarProducto,"productos.txt");

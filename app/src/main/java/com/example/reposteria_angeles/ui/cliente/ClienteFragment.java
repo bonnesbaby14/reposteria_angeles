@@ -6,30 +6,23 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reposteria_angeles.Cliente;
 import com.example.reposteria_angeles.ControladorBD;
 import com.example.reposteria_angeles.ListaClientes;
 import com.example.reposteria_angeles.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.reposteria_angeles.databinding.FragmentClienteBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ClienteFragment extends Fragment {
@@ -59,11 +52,11 @@ public class ClienteFragment extends Fragment {
 
 
             //botones
-            agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
-            editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
-            eliminar = (ImageButton) root.findViewById(R.id.btnEliminarProducto);
-            buscar = (ImageButton) root.findViewById(R.id.btnBuscarCliente);
-            ver = (ImageButton) root.findViewById(R.id.btnVerCliente);
+            agregar = (ImageButton) root.findViewById(R.id.btnAgregarG);
+            editar = (ImageButton) root.findViewById(R.id.btnEditarG);
+            eliminar = (ImageButton) root.findViewById(R.id.btnEliminarG);
+            buscar = (ImageButton) root.findViewById(R.id.btnBuscarG);
+            ver = (ImageButton) root.findViewById(R.id.btnVerG);
             //Eventos
 
             editar.setOnClickListener(new View.OnClickListener() {

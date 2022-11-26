@@ -1,18 +1,23 @@
 package com.example.reposteria_angeles.ui.gasto;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reposteria_angeles.MainActivity;
+import com.example.reposteria_angeles.ControladorBD;
 import com.example.reposteria_angeles.R;
 
 import androidx.annotation.NonNull;
@@ -20,24 +25,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.reposteria_angeles.databinding.FragmentGastoBinding;
+import com.example.reposteria_angeles.ui.cliente.ClienteFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class GastoFragment extends Fragment {
 
     private FragmentGastoBinding binding;
     Spinner buscarGasto, buscarProducto;
-    EditText nombre, costo, numProduct, description;
-    ImageButton agregar, editar, eliminar;
+    EditText nombre, costo, numProduct, description, identificador;
+    ImageButton agregar, editar, eliminar, ver, buscar;
     ArrayList<String> gastosList, productsList;
     ArrayAdapter<String> productAdapter;
     String puntero;
     private int dia, mes, anio;
+    ControladorBD gasto;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,9 +52,11 @@ public class GastoFragment extends Fragment {
         gastosList = new ArrayList<String>();
         productsList = new ArrayList<String>();
 
+
         binding = FragmentGastoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         //Vincular componentes
+        identificador = root.findViewById(R.id.txtIdentificadorG);
         buscarGasto = root.findViewById(R.id.spBuscarCliente);
         buscarProducto = root.findViewById(R.id.spBuscarProductoGasto);
         nombre = root.findViewById(R.id.txtNombre);
@@ -57,33 +64,66 @@ public class GastoFragment extends Fragment {
         numProduct  = root.findViewById(R.id.txtPrecio);
         description = root.findViewById(R.id.txtCaduccidad);
         //Llenado del spinner
-        productsList = llenarSpinner(productsList,buscarProducto,"productos.txt");
-        productAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,productsList);
+        gasto = new ControladorBD(this.getContext());
+        llenarProductos();
         //buttons
-        agregar = (ImageButton) root.findViewById(R.id.btnAgregarP);
-        editar = (ImageButton) root.findViewById(R.id.btnEditarProducto);
-        eliminar = (ImageButton) root.findViewById(R.id.btnEliminarProducto);
+        agregar = (ImageButton) root.findViewById(R.id.btnAgregarG);
+        editar = (ImageButton) root.findViewById(R.id.btnEditarG);
+        eliminar = (ImageButton) root.findViewById(R.id.btnEliminarG);
+        ver = (ImageButton) root.findViewById(R.id.btnVerG);
+        buscar = (ImageButton) root.findViewById(R.id.btnBuscarG);
         //Acciones botones
+
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(buscarProducto.getSelectedItem()=="Selecciona..."||nombre.getText().toString().isEmpty()
+                if(buscarProducto.getSelectedItem()==""||nombre.getText().toString().isEmpty()
                         ||costo.getText().toString().isEmpty()||numProduct.getText().toString().isEmpty()||
-                        description.getText().toString().isEmpty()){
-                    Toast.makeText(getContext(), "Llena los campos.", Toast.LENGTH_LONG).show();
-
+                        description.getText().toString().isEmpty() || identificador.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Por favor llenar todos los campos.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    grabar(buscarProducto.getSelectedItem().toString(), nombre.getText().toString(),
-                            costo.getText().toString(), numProduct.getText().toString(), description.getText().toString());
-                    //Limpieza
-                    buscarProducto.setSelection(0);
+                    SQLiteDatabase bd = gasto.getWritableDatabase();
+
+                    String producto = buscarProducto.getSelectedItem().toString();
+                    String nombreGasto = nombre.getText().toString();
+                    String costoGasto = costo.getText().toString();
+                    String numeroGasto = numProduct.getText().toString();
+                    String descripcionGasto = description.getText().toString();
+                    String identificadorGasto = identificador.getText().toString();
+
+
+                    ContentValues registro = new ContentValues();
+
+                    registro.put("expenseId", identificadorGasto);
+                    registro.put("productNameExpense", producto);
+                    registro.put("expenseName", nombreGasto);
+                    registro.put("expenseCost", costoGasto);
+                    registro.put("expenseNumber", numeroGasto);
+                    registro.put("expenseDescripcion", descripcionGasto);
+
+                    if (bd != null) {
+
+                        long x = 0;
+                        try {
+                            x = bd.insert("expense", null, registro);
+                        } catch (SQLException e) {
+                            Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                        }
+
+                        bd.close();
+                    }
+
+                    identificador.setText("");
                     nombre.setText("");
-                    costo.setText("");
-                    numProduct.setText("");
-                    description.setText("");
-                    recargarGastos();
-                    Toast.makeText(getContext(), "Gasto guardado", Toast.LENGTH_LONG).show();
+                    buscarProducto.set
+                    direccion.setText("");
+                    preferencia.setText("");
+                    telefono.setText("");
+                    identificador.requestFocus();
+
+                    Toast.makeText(GastoFragment.this.getContext(), "¡Gasto registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
+
                 }
             }//onClick
         });//agregar
@@ -91,99 +131,18 @@ public class GastoFragment extends Fragment {
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
-                    BufferedReader br = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo = "";
-                    boolean editado = false;
-                    while(linea!= null){
-                        if(linea.equals(puntero)){
-                            editado = true;
-                            String[] aux = linea.split("-");
-                            aux[0] = buscarProducto.getSelectedItem().toString();
-                            aux[1] = nombre.getText().toString();
-                            aux[2] = costo.getText().toString();
-                            aux[3] = numProduct.getText().toString();
-                            aux[4] = description.getText().toString();
-                            String resultado = aux[0]+"-"+aux[1]+"-"+aux[2]+"-"+aux[3]+"-"+aux[4] +"-" +aux[5]+"\n";
-                            todo += resultado;
-                        }else{
-                            todo = todo + linea +"\n";
 
-                        }//else
-                        linea = br.readLine();
-                    }//while
-                    br.close();
-                    archivo.close();
 
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("gastos.txt",MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
-                    if(editado)
-                        Toast.makeText(getContext(), "Gasto editado", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Seleccione un gasto.", Toast.LENGTH_LONG).show();
-                    //Limpieza
-                    buscarProducto.setSelection(0);
-                    nombre.setText("");
-                    costo.setText("");
-                    numProduct.setText("");
-                    description.setText("");
-                    recargarGastos();
-                }catch (IOException ex){
-
-                }//catch
             }//onClick
         });//editar
 
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
-                    BufferedReader br  = new BufferedReader(archivo);
-                    String linea = br.readLine();
-                    String todo  = "";
-                    boolean eliminado = false;
-                    while (linea!=null){
-                        if(linea.equals(puntero)){
-                            eliminado = true;
-                        }else{
-                            todo = todo + linea +"\n";
-                        }//else
-                        linea = br.readLine();
 
-                    }//while
-
-                    br.close();
-                    archivo.close();
-
-                    OutputStreamWriter archivo2 = new OutputStreamWriter(getContext().openFileOutput("gastos.txt",MainActivity.MODE_PRIVATE));
-                    archivo2.write(todo);
-                    archivo2.flush();
-                    archivo2.close();
-                    if(eliminado)
-                        Toast.makeText(getContext(), "Gasto eliminado", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(getContext(), "Seleccione un gasto.", Toast.LENGTH_LONG).show();
-
-                    //Limpieza
-                    buscarProducto.setSelection(0);
-                    nombre.setText("");
-                    costo.setText("");
-                    numProduct.setText("");
-                    description.setText("");
-                    recargarGastos();
-                }catch (IOException ex){
-
-                }//catch
             }//onClick
         });//eliminar
-       // final TextView textView = binding.textSlideshow;
-        //gastoViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        recargarGastos();
+
         return root;
     }
 
@@ -193,68 +152,44 @@ public class GastoFragment extends Fragment {
         binding = null;
     }
 
-    //Métodos
-    public void grabar(String producto, String nombre, String costo, String numProduct, String description ){
-        try{
-            OutputStreamWriter archivo = new OutputStreamWriter(getContext().openFileOutput("gastos.txt", MainActivity.MODE_APPEND));
-            //FECHA DE GUARDADO
-            Calendar cal = Calendar.getInstance();
-            dia = cal.get(Calendar.DAY_OF_MONTH);
-            mes = cal.get(Calendar.MONTH);
-            anio = cal.get(Calendar.YEAR);
-            String fecha = dia+"/"+(mes+1)+"/"+anio;
 
-            archivo.write(producto+"-"+nombre+"-"+costo+"-"+numProduct+"-"+description+"-"+fecha+"\n");
-            archivo.flush();
-            archivo.close();
-        }catch (IOException ex){
+    public void llenarProductos(){
+        SQLiteDatabase bd = gasto.getReadableDatabase();
 
-        }//catch
-    }//grabar
 
-    public void recargarGastos(){
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput("gastos.txt"));
-            if(archivo==null){
-                grabar("product","name","100","3","description");
-            }else{
-               llenarSpinner(gastosList,buscarGasto,"gastos.txt");
-               buscarGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                   @Override
-                   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                       String[] gasto = parent.getItemAtPosition(position).toString().split("-");
-                       if(gasto.length>1){
-                           puntero = parent.getItemAtPosition(position).toString();
-                           //Producto
-                           int productPosition = productAdapter.getPosition(gasto[0]);
-                           buscarProducto.setSelection(productPosition);
-                           nombre.setText(gasto[1]);
-                           costo.setText(gasto[2]);
-                           numProduct.setText(gasto[3]);
-                           description.setText(gasto[4]);
-                       }
-                       if(buscarGasto.getSelectedItem().toString()=="Selecciona..."){
-                           buscarProducto.setSelection(0);
-                           nombre.setText("");
-                           costo.setText("");
-                           numProduct.setText("");
-                           description.setText("");
-                           puntero = "";
-                       }
-                   }//onItemSelected
+        Cursor fila = bd.rawQuery("select productName from product ", null);
 
-                   @Override
-                   public void onNothingSelected(AdapterView<?> parent) {
-                   }//onNothingSelected
-               });//buscarGasto
+        int n = fila.getCount();
+        int nr = 1;
 
-            }//else
-        }catch (IOException ex){
-            grabar("product","name","100","3","description");
-            Toast.makeText(getContext(), "Se creó el archivo gastos", Toast.LENGTH_SHORT).show();
-            recargarGastos();
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+                productsList.add(fila.getString(0));
+                nr++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
         }
-    }//recargarGastos
+        bd.close();
+
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, productsList){
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                //change the color to which ever you want
+                ((CheckedTextView) view).setTextColor(Color.BLACK);
+                //change the size to which ever you want
+
+                //for using sp values use setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buscarProducto.setAdapter(adapter);
+    }
+
+
 
     private ArrayList<String> llenarSpinner(ArrayList<String> arrayList,Spinner spinner,String file){
         try {

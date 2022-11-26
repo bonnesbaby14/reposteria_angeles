@@ -146,7 +146,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/txtCaduccidad">
 
                 <ImageButton
-                    android:id="@+id/btnAgregarP"
+                    android:id="@+id/btnAgregarG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="32dp"
@@ -155,7 +155,7 @@
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
                 <ImageButton
-                    android:id="@+id/btnBuscarCliente"
+                    android:id="@+id/btnBuscarG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="32dp"
@@ -165,7 +165,7 @@
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
                 <ImageButton
-                    android:id="@+id/btnEditarProducto"
+                    android:id="@+id/btnEditarG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="32dp"
@@ -174,7 +174,7 @@
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <ImageButton
-                    android:id="@+id/btnEliminarProducto"
+                    android:id="@+id/btnEliminarG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="32dp"
@@ -183,7 +183,7 @@
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <ImageButton
-                    android:id="@+id/btnVerCliente"
+                    android:id="@+id/btnVerG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="32dp"
