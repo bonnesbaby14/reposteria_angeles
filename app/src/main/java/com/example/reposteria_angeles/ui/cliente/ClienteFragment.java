@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +32,7 @@ public class ClienteFragment extends Fragment {
         //Componentes del fragment
         TextView listaClientes;
         EditText nombre, direccion, telefono, preferencia, identificador;
-        ImageButton agregar, editar, eliminar, buscar, ver;
+        ImageButton agregar, editar, eliminar, buscar, ver, clean;
         ControladorBD cliente;
         private int dia, mes, anio;
         public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,6 +58,7 @@ public class ClienteFragment extends Fragment {
             eliminar = (ImageButton) root.findViewById(R.id.btnEliminarG);
             buscar = (ImageButton) root.findViewById(R.id.btnBuscarG);
             ver = (ImageButton) root.findViewById(R.id.btnVerG);
+            clean = (ImageButton) root.findViewById(R.id.btnCleanC);
             //Eventos
 
             editar.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +153,19 @@ public class ClienteFragment extends Fragment {
                     }//else
                 }//onClick
             });//agregar
+
+            clean.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    identificador.setText("");
+                    nombre.setText("");
+                    direccion.setText("");
+                    preferencia.setText("");
+                    telefono.setText("");
+                    identificador.requestFocus();
+                }
+            });
+
 
             buscar.setOnClickListener(new View.OnClickListener() {
                 @Override

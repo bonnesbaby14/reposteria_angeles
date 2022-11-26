@@ -1,6 +1,7 @@
 package com.example.reposteria_angeles.ui.gasto;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.reposteria_angeles.ControladorBD;
+import com.example.reposteria_angeles.ListaClientes;
+import com.example.reposteria_angeles.ListaGasto;
 import com.example.reposteria_angeles.R;
 
 import androidx.annotation.NonNull;
@@ -37,7 +40,7 @@ public class GastoFragment extends Fragment {
     private FragmentGastoBinding binding;
     Spinner buscarGasto, buscarProducto;
     EditText nombre, costo, numProduct, description, identificador;
-    ImageButton agregar, editar, eliminar, ver, buscar;
+    ImageButton agregar, editar, eliminar, ver, buscar, clean;
     ArrayList<String> gastosList, productsList;
     ArrayAdapter<String> productAdapter;
     String puntero;
@@ -72,6 +75,7 @@ public class GastoFragment extends Fragment {
         eliminar = (ImageButton) root.findViewById(R.id.btnEliminarG);
         ver = (ImageButton) root.findViewById(R.id.btnVerG);
         buscar = (ImageButton) root.findViewById(R.id.btnBuscarG);
+        clean = (ImageButton) root.findViewById(R.id.btnClean);
         //Acciones botones
 
         agregar.setOnClickListener(new View.OnClickListener() {
@@ -116,21 +120,117 @@ public class GastoFragment extends Fragment {
 
                     identificador.setText("");
                     nombre.setText("");
-                    buscarProducto.set
-                    direccion.setText("");
-                    preferencia.setText("");
-                    telefono.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
                     identificador.requestFocus();
 
                     Toast.makeText(GastoFragment.this.getContext(), "¡Gasto registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
-
                 }
             }//onClick
         });//agregar
 
+        buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase bd = gasto.getReadableDatabase();
+
+
+                String identificadorCliente = identificador.getText().toString();
+
+                if( !identificadorCliente.isEmpty() ){
+
+                    Cursor fila = bd.rawQuery("select productNameExpense, expenseName, expenseCost, expenseNumber, expenseDescripcion from expense " +
+                            "where expenseId="+identificadorCliente, null);
+
+                    if (fila.moveToFirst()){
+                        int numero = buscarNumeroProducto(fila.getString(0));
+                        buscarProducto.setSelection(numero);
+                        nombre.setText(fila.getString(1));
+                        costo.setText(fila.getString(2));
+                        numProduct.setText(fila.getString(3));
+                        description.setText(fila.getString(4));
+                        bd.close();
+                    } else {
+                        Toast.makeText(GastoFragment.this.getContext(),"Identificador de cliente no existe.",Toast.LENGTH_SHORT).show();
+                        identificador.setText("");
+                        identificador.requestFocus();
+                        bd.close();
+                    }//else-if fila
+                } else {
+                    Toast.makeText(GastoFragment.this.getContext(),"Ingresa identificador de cliente",Toast.LENGTH_SHORT).show();
+                    identificador.requestFocus();
+                }//else
+            }//onClick
+        });//buscar
+
+        clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                identificador.setText("");
+                nombre.setText("");
+                costo.setText("");
+                numProduct.setText("");
+                description.setText("");
+                identificador.requestFocus();
+            }
+        });
+
+        ver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GastoFragment.this.getContext(), ListaGasto.class);
+                startActivity(intent);
+            }
+        });//Ver
+
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String identificadorG = identificador.getText().toString();
+                SQLiteDatabase bd = gasto.getWritableDatabase();
+                if(buscarProducto.getSelectedItem()==""||nombre.getText().toString().isEmpty()
+                        ||costo.getText().toString().isEmpty()||numProduct.getText().toString().isEmpty()||
+                        description.getText().toString().isEmpty() || identificador.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Por favor llenar todos los campos.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    String producto = buscarProducto.getSelectedItem().toString();
+                    String nombreGasto = nombre.getText().toString();
+                    String costoGasto = costo.getText().toString();
+                    String numeroGasto = numProduct.getText().toString();
+                    String descripcionGasto = description.getText().toString();
+                    String identificadorGasto = identificador.getText().toString();
+
+
+                    ContentValues registro = new ContentValues();
+
+                    registro.put("expenseId", identificadorGasto);
+                    registro.put("productNameExpense", producto);
+                    registro.put("expenseName", nombreGasto);
+                    registro.put("expenseCost", costoGasto);
+                    registro.put("expenseNumber", numeroGasto);
+                    registro.put("expenseDescripcion", descripcionGasto);
+
+
+                    int cantidad=0;
+
+                    cantidad = bd.update("expense",registro,"expenseId="+identificadorG,null);
+
+                    bd.close();
+                    if( cantidad > 0)
+                        Toast.makeText(GastoFragment.this.getContext(),"Datos del gasto actualizados.",Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(GastoFragment.this.getContext(),"El identificador del gasto no existe.",Toast.LENGTH_SHORT).show();
+
+                    identificador.setText("");
+                    nombre.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
+                    identificador.requestFocus();
+                }
 
 
             }//onClick
@@ -139,11 +239,64 @@ public class GastoFragment extends Fragment {
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SQLiteDatabase bd = gasto.getWritableDatabase();
+
+                String id = identificador.getText().toString();
+
+                if( !id.isEmpty()){
+
+                    int cantidad=0;
+
+                    cantidad = bd.delete("expense","expenseId = "+id, null);
+
+                    bd.close();
+
+                    identificador.setText("");
+                    nombre.setText("");
+                    costo.setText("");
+                    numProduct.setText("");
+                    description.setText("");
+                    identificador.requestFocus();
+
+                    if( cantidad > 0)
+                        Toast.makeText(GastoFragment.this.getContext(),"Gasto eliminado.",Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(GastoFragment.this.getContext(),"El identificador del gasto no existe.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(GastoFragment.this.getContext(),"Ingresa identificador del gasto",Toast.LENGTH_SHORT).show();
+                }//else
 
             }//onClick
         });//eliminar
 
         return root;
+    }
+
+
+
+    private int buscarNumeroProducto(String string) {
+        int num=0;
+        SQLiteDatabase bd = gasto.getReadableDatabase();
+
+
+        Cursor fila = bd.rawQuery("select productName from product ", null);
+
+        int n = fila.getCount();
+        int cont = 0;
+
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+
+                if(fila.getString(0).equals(string)) num = cont;
+                cont++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
+        }
+
+        bd.close();
+        return num;
     }
 
     @Override
@@ -189,34 +342,43 @@ public class GastoFragment extends Fragment {
         buscarProducto.setAdapter(adapter);
     }
 
+    public void llenarProductos(String a){
+        SQLiteDatabase bd = gasto.getReadableDatabase();
 
 
-    private ArrayList<String> llenarSpinner(ArrayList<String> arrayList,Spinner spinner,String file){
-        try {
-            InputStreamReader archivo = new InputStreamReader(getContext().openFileInput(file));
-            if(archivo!=null) {
-                BufferedReader br = new BufferedReader(archivo);
-                String linea = br.readLine();
-                arrayList.clear();
-                arrayList.add("Selecciona...");
-                while (linea!=null){
-                    String[] split = linea.split("-");
-                    if(file=="gastos.txt")
-                        arrayList.add(linea);
-                    else
-                        arrayList.add(split[0]);
-                    linea = br.readLine();
-                }//while
-                br.close();
-                archivo.close();
-                // se llena el spinner
-                ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-            }//if
-        }catch(IOException ex){
+        Cursor fila = bd.rawQuery("select productName from product ", null);
 
-        }//catch
-        return arrayList;
-    }//llenarSpinner
+        int n = fila.getCount();
+        int nr = 1;
+
+        if(n>0) {
+            fila.moveToFirst();
+            do {
+                productsList.add(fila.getString(0));
+                nr++;
+            } while (fila.moveToNext());
+        }else{
+            Toast.makeText(getContext(), "No hay productos registrados", Toast.LENGTH_SHORT).show();
+        }
+        bd.close();
+
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, productsList){
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                //change the color to which ever you want
+                ((CheckedTextView) view).setTextColor(Color.BLACK);
+                //change the size to which ever you want
+
+                //for using sp values use setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                return view;
+            }
+        };
+        buscarProducto.setSelection ( productsList.indexOf(a) );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buscarProducto.setAdapter(adapter);
+    }
+
+
+
 }//class

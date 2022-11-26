@@ -183,6 +183,16 @@
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <ImageButton
+                    android:id="@+id/btnCleanC"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/ic_baseline_cleaning_services_24"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
                     android:id="@+id/btnVerG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
