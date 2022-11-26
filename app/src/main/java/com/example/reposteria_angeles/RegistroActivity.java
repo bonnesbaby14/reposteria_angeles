@@ -40,7 +40,7 @@ public class RegistroActivity extends AppCompatActivity {
         //onClick
         signIn.setOnClickListener(view -> {
             SQLiteDatabase db = admin.getWritableDatabase();
-            String usr=user.getText().toString();
+            String usr=user.getText().toString().trim();
             String pass=password.getText().toString();
             String nam=name.getText().toString();
             if(usr.isEmpty()||pass.isEmpty()||nam.isEmpty()){

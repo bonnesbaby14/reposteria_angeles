@@ -4,9 +4,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,11 +18,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reposteria_angeles">
         <activity
+            android:name=".ProductsList"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ListaClientes"
             android:exported="false" />
         <activity
             android:name=".ListadoCliente"
             android:exported="false" />
+        <activity
+            android:name=".ui.producto.CaptureAct"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme" />
         <activity
             android:name=".RegistroActivity"
             android:exported="false"
