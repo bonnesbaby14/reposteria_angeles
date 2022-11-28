@@ -40,6 +40,11 @@
         android:name="com.example.reposteria_angeles.ui.estadistica.EstadisticaFragment"
         android:label="Estadísticas"
         tools:layout="@layout/fragment_estadistica" />
+    <fragment
+        android:id="@+id/nav_branches"
+        android:name="com.example.reposteria_angeles.ui.branch.BranchFragment"
+        android:label="Sucursales"
+        tools:layout="@layout/fragment_branch" />
 
 
 </navigation>

@@ -33,6 +33,10 @@
             android:title="Estadísticas"
             android:visible="false" />
         <item
+            android:id="@+id/nav_branches"
+            android:icon="@drawable/ic_baseline_storefront_24"
+            android:title="Sucursales" />
+        <item
             android:id="@+id/nav_salir"
             android:icon="@drawable/ic_baseline_login_24"
             android:title="Salir" />
