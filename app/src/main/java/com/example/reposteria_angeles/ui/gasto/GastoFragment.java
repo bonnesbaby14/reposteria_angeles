@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.reposteria_angeles.databinding.FragmentGastoBinding;
 import com.example.reposteria_angeles.ui.cliente.ClienteFragment;
+import com.example.reposteria_angeles.ui.ingreso.IngresoFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class GastoFragment extends Fragment {
     ArrayAdapter<String> productAdapter;
     String puntero;
     private int dia, mes, anio;
+    int cant;
     ControladorBD gasto;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -98,25 +100,63 @@ public class GastoFragment extends Fragment {
 
 
                     ContentValues registro = new ContentValues();
+                    ContentValues registro2 = new ContentValues();
+
+                    String[] parts = producto.split("-");
+                    String nombreG = parts[0]; //
+                    String id = parts[1];
 
                     registro.put("expenseId", identificadorGasto);
-                    registro.put("productNameExpense", producto);
+                    registro.put("productNameExpense", nombreG);
                     registro.put("expenseName", nombreGasto);
                     registro.put("expenseCost", costoGasto);
                     registro.put("expenseNumber", numeroGasto);
                     registro.put("expenseDescripcion", descripcionGasto);
-
+                    
                     if (bd != null) {
 
-                        long x = 0;
-                        try {
-                            x = bd.insert("expense", null, registro);
-                        } catch (SQLException e) {
-                            Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                        //agregar producto
+                        Cursor fila = bd.rawQuery("select productQty from product " +
+                                "where productId="+id, null);
+
+                        if (fila.moveToFirst()){
+
+                            cant = Integer.parseInt(fila.getString(0));
+                            int actual = Integer.parseInt(numeroGasto);
+
+
+
+                                long x = 0;
+                                try {
+                                    x = bd.insert("expense", null, registro);
+                                } catch (SQLException e) {
+                                    Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                                }
+
+                                int finalProductos = cant + actual;
+                                String finalP = String.valueOf(finalProductos);
+
+                                int cantidad=0;
+                                registro2.put("productQty", finalP);
+
+                                cantidad = bd.update("product",registro2,"productId="+id,null);
+
+                                bd.close();
+
+                                Toast.makeText(GastoFragment.this.getContext(), "¡Compra registrada de manera exitosa!", Toast.LENGTH_SHORT).show();
+
+                                if( cantidad > 0)
+                                    Toast.makeText(GastoFragment.this.getContext(),"Datos del producto actualizados.",Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(GastoFragment.this.getContext(),"No se modifico el producto.",Toast.LENGTH_SHORT).show();
+
+
                         }
 
                         bd.close();
                     }
+
+
 
                     identificador.setText("");
                     nombre.setText("");
@@ -205,9 +245,12 @@ public class GastoFragment extends Fragment {
 
 
                     ContentValues registro = new ContentValues();
+                    String[] parts = producto.split("-");
+                    String nombreG = parts[0]; //
+                    String id = parts[1];
 
                     registro.put("expenseId", identificadorGasto);
-                    registro.put("productNameExpense", producto);
+                    registro.put("productNameExpense", nombreG);
                     registro.put("expenseName", nombreGasto);
                     registro.put("expenseCost", costoGasto);
                     registro.put("expenseNumber", numeroGasto);
@@ -310,7 +353,7 @@ public class GastoFragment extends Fragment {
         SQLiteDatabase bd = gasto.getReadableDatabase();
 
 
-        Cursor fila = bd.rawQuery("select productName from product ", null);
+        Cursor fila = bd.rawQuery("select productName, productId from product ", null);
 
         int n = fila.getCount();
         int nr = 1;
@@ -318,7 +361,7 @@ public class GastoFragment extends Fragment {
         if(n>0) {
             fila.moveToFirst();
             do {
-                productsList.add(fila.getString(0));
+                productsList.add(fila.getString(0)+"-"+fila.getString(1));
                 nr++;
             } while (fila.moveToNext());
         }else{

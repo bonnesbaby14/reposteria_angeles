@@ -51,6 +51,7 @@ public class IngresoFragment extends Fragment {
     ArrayAdapter<String> adapterCliente, adapterProducto;
     String puntero;
     ControladorBD ingreso;
+    int cant;
     private int dia, mes, anio;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -149,10 +150,15 @@ public class IngresoFragment extends Fragment {
 
 
                     ContentValues registro = new ContentValues();
+                    ContentValues registro2 = new ContentValues();
+
+                    String[] parts = producto.split("-");
+                    String nombre = parts[0]; //
+                    String id = parts[1];
 
                     registro.put("ingresoId", identificadorI);
                     registro.put("cliente", cliente);
-                    registro.put("productos", producto);
+                    registro.put("productos", nombre);
                     registro.put("productosVendidos", productoV);
                     registro.put("nombreVenta", nombreV);
                     registro.put("ventaTotal", venta);
@@ -161,11 +167,44 @@ public class IngresoFragment extends Fragment {
 
                     if (bd != null) {
 
-                        long x = 0;
-                        try {
-                            x = bd.insert("ingreso", null, registro);
-                        } catch (SQLException e) {
-                            Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                        //quitar producto
+
+                        Cursor fila = bd.rawQuery("select productQty from product " +
+                                "where productId="+id, null);
+
+                        if (fila.moveToFirst()){
+
+                            cant = Integer.parseInt(fila.getString(0));
+                            int actual = Integer.parseInt(productoV);
+
+
+                            if (cant < actual){
+                                Toast.makeText(IngresoFragment.this.getContext(), "No puede realizar la venta, NO HAY PRODUCTO SUFICIENTE", Toast.LENGTH_SHORT).show();
+                            }else{
+                                long x = 0;
+                                try {
+                                    x = bd.insert("ingreso", null, registro);
+                                } catch (SQLException e) {
+                                    Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
+                                }
+                                int finalProductos = cant - actual;
+                                String finalP = String.valueOf(finalProductos);
+
+                                int cantidad=0;
+                                registro2.put("productQty", finalP);
+
+                                cantidad = bd.update("product",registro2,"productId="+id,null);
+
+                                bd.close();
+
+                                Toast.makeText(IngresoFragment.this.getContext(), "¡Ingreso registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
+
+                                if( cantidad > 0)
+                                    Toast.makeText(IngresoFragment.this.getContext(),"Datos del producto actualizados.",Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(IngresoFragment.this.getContext(),"No se modifico el producto.",Toast.LENGTH_SHORT).show();
+
+                            }
                         }
 
                         bd.close();
@@ -178,8 +217,7 @@ public class IngresoFragment extends Fragment {
                     descripcion.setText("");
                     identificador.requestFocus();
 
-                    Toast.makeText(IngresoFragment.this.getContext(), "¡Ingreso registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
-                }
+                               }
             }//onClick
         });//agregar
 
@@ -226,9 +264,13 @@ public class IngresoFragment extends Fragment {
 
                     ContentValues registro = new ContentValues();
 
+                    String[] parts = producto.split("-");
+                    String nombre = parts[0]; //
+                    String id = parts[1];
+
                     registro.put("ingresoId", identificadorI);
                     registro.put("cliente", cliente);
-                    registro.put("productos", producto);
+                    registro.put("productos", nombre);
                     registro.put("productosVendidos", productoV);
                     registro.put("nombreVenta", nombreV);
                     registro.put("ventaTotal", venta);
@@ -352,7 +394,7 @@ public class IngresoFragment extends Fragment {
         SQLiteDatabase bd = ingreso.getReadableDatabase();
 
 
-        Cursor fila = bd.rawQuery("select productName from product ", null);
+        Cursor fila = bd.rawQuery("select productName, productId from product ", null);
 
         int n = fila.getCount();
         int nr = 1;
@@ -360,7 +402,7 @@ public class IngresoFragment extends Fragment {
         if(n>0) {
             fila.moveToFirst();
             do {
-                productos.add(fila.getString(0));
+                productos.add(fila.getString(0)+"-"+fila.getString(1));
                 nr++;
             } while (fila.moveToNext());
         }else{
