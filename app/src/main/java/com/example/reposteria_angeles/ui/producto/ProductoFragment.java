@@ -1,9 +1,16 @@
 package com.example.reposteria_angeles.ui.producto;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +23,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
-import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,9 +34,6 @@ import com.example.reposteria_angeles.ControladorBD;
 import com.example.reposteria_angeles.ProductsList;
 import com.example.reposteria_angeles.databinding.FragmentProductoBinding;
 import com.example.reposteria_angeles.R;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -47,6 +52,8 @@ public class ProductoFragment extends Fragment {
     String expiration;
     ControladorBD admin;
     private int day, month, year;
+    private final static String CHANNEL_ID = "NOTIFICACION";
+    public final static int NOTIFICACION_ID = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -123,6 +130,8 @@ public class ProductoFragment extends Fragment {
                     String dateAux = date.getText().toString().replace("/","-");
                     if(admin.productInsertData(productId.getText().toString(),name.getText().toString(),quantity.getText().toString(),price.getText().toString(),dateAux,description.getText().toString())){
                         Toast.makeText(root.getContext(), "Producto registrado con éxito", Toast.LENGTH_SHORT).show();
+                        crearCanalNotificacion();
+                        crearNotificacion(quantity.getText().toString(),name.getText().toString());
                     }else{
                         Toast.makeText(root.getContext(), "Error al registrar producto", Toast.LENGTH_SHORT).show();
                     }
@@ -235,6 +244,42 @@ public class ProductoFragment extends Fragment {
 
         }
     } );
+
+    private void crearCanalNotificacion() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//Nombre del canal
+            CharSequence name = "Notificación";
+//Instancia para gestionar el canal y el servicio de la notificación
+            NotificationChannel notificationChannel = new
+                    NotificationChannel(CHANNEL_ID, name,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }//if
+    }//crearCanalNotificacion
+
+    private void crearNotificacion(String cant, String nombre) {
+//Instancia para generar la notificaciòn, especificando el contexto de la aplicación y el
+//canal de comunicación
+        NotificationCompat.Builder builder = new
+                NotificationCompat.Builder(getContext(),CHANNEL_ID);
+//Características a incluir en la notificación
+        builder.setSmallIcon(R.mipmap.logo);
+        builder.setContentTitle("REPOSTERÍA ANGELES: Productos");
+        builder.setContentText("Se agregaron "+cant+" productos de: "+nombre);
+        builder.setColor(Color.BLUE);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setLights(Color.RED, 1000,1000);
+        builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+//Especifica la Activity que aparece al momento de elegir la notificación
+
+//Instancia que gestiona la notificación con el dispositivo
+        NotificationManagerCompat notificationManagerCompat =
+                NotificationManagerCompat.from(getContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+    }//crearNotificacion
 
 
 }//fragment
