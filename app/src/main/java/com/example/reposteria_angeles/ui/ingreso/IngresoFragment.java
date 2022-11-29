@@ -194,8 +194,11 @@ public class IngresoFragment extends Fragment {
 
                             if (cant < actual){
                                 Toast.makeText(IngresoFragment.this.getContext(), "No puede realizar la venta, NO HAY PRODUCTO SUFICIENTE", Toast.LENGTH_SHORT).show();
-                                crearCanalNotificacion();
-                                crearNotificacion(cant, nombre);
+                                int finalProductos = cant - actual;
+                                if(finalProductos <= 0){
+                                    crearCanalNotificacion();
+                                    crearNotificacion2(cant, nombre);
+                                }
                             }else{
                                 long x = 0;
                                 try {
@@ -204,6 +207,12 @@ public class IngresoFragment extends Fragment {
                                     Log.e("Exception", "Error: " + String.valueOf(e.getMessage()));
                                 }
                                 int finalProductos = cant - actual;
+
+                                if(finalProductos <= 0){
+                                    crearCanalNotificacion();
+                                    crearNotificacion2(cant, nombre);
+                                }
+
                                 String finalP = String.valueOf(finalProductos);
 
                                 int cantidad=0;
@@ -212,6 +221,9 @@ public class IngresoFragment extends Fragment {
                                 cantidad = bd.update("product",registro2,"productId="+id,null);
 
                                 bd.close();
+
+                                crearCanalNotificacion();
+                                crearNotificacion(cant, nombre);
 
                                 Toast.makeText(IngresoFragment.this.getContext(), "¡Ingreso registrado de manera exitosa!", Toast.LENGTH_SHORT).show();
 
@@ -499,7 +511,7 @@ public class IngresoFragment extends Fragment {
                 NotificationCompat.Builder(getContext(),CHANNEL_ID);
 //Características a incluir en la notificación
         builder.setSmallIcon(R.mipmap.logo);
-        builder.setContentTitle("NOTIFICACIÓN REPOSTERÍA ANGELES");
+        builder.setContentTitle("REPOSTERÍA ANGELES: Venta hecha");
         builder.setContentText("El producto "+nombre+ " tiene "+cant+" elementos en el almacen");
         builder.setColor(Color.BLUE);
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -514,5 +526,26 @@ public class IngresoFragment extends Fragment {
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
     }//crearNotificacion
 
+    private void crearNotificacion2(int cant, String nombre) {
+//Instancia para generar la notificaciòn, especificando el contexto de la aplicación y el
+//canal de comunicación
+        NotificationCompat.Builder builder = new
+                NotificationCompat.Builder(getContext(),CHANNEL_ID);
+//Características a incluir en la notificación
+        builder.setSmallIcon(R.mipmap.logo);
+        builder.setContentTitle("REPOSTERÍA ANGELES: Se termino producto");
+        builder.setContentText("El producto "+nombre+ " ya no tiene elementos en el almacen");
+        builder.setColor(Color.BLUE);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setLights(Color.RED, 1000,1000);
+        builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+//Especifica la Activity que aparece al momento de elegir la notificación
+
+//Instancia que gestiona la notificación con el dispositivo
+        NotificationManagerCompat notificationManagerCompat =
+                NotificationManagerCompat.from(getContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+    }//crearNotificacion
 
 }//class
