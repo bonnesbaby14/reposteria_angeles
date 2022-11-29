@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.android.PolyUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +67,7 @@ public class BranchFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastKnownLocation;
     private LatLng defaultLocation;
-    private boolean originLocation = false, locationEnabled = false;
+    private boolean selectedLocation = false, locationEnabled = false;
     private String key = "AIzaSyCngJvHlT2HUyjALQdzVIiJik58zZY1o7U";
     private LatLng branch1, branch2, branch3;
     private int position;
@@ -91,10 +92,14 @@ public class BranchFragment extends Fragment {
             //MarkerOptions marker = new MarkerOptions().position(sydney).title("Hello Maps");
            // marker.icon(bitmapDescriptor(getContext(),R.drawable.bakery));
             mMap = googleMap;
+            locationEnabled = false;
+            mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Ubicación"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation,DEFAULT_ZOOM));
             if(ContextCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED)
             {
+                mMap.clear();
                 mMap.setMyLocationEnabled(true);
                 locationEnabled  = true;
                 getDeviceLocation();
@@ -112,7 +117,7 @@ public class BranchFragment extends Fragment {
                 Toast.makeText(getContext(), "Active la ubicación", Toast.LENGTH_SHORT).show();
             }
             setBranches();
-            if(!locationEnabled){
+            if(locationEnabled == false){
                 mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Ubicación"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation,DEFAULT_ZOOM));
                 Toast.makeText(getContext(), "Ubicación desactivada", Toast.LENGTH_SHORT).show();
@@ -123,7 +128,10 @@ public class BranchFragment extends Fragment {
                 public boolean onMarkerClick(Marker marker) {
                     for(int i=0; i<branches.size();i++){
                         if(marker.getPosition().longitude==branches.get(i).longitude &&marker.getPosition().latitude==branches.get(i).latitude) {
-                            direction(defaultLocation,branches.get(i),brancheNames.get(i));
+                            if(selectedLocation==true||locationEnabled==true)
+                                direction(defaultLocation,branches.get(i),brancheNames.get(i));
+                            else
+                                Toast.makeText(getContext(), "Seleccione ubicación", Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -131,28 +139,10 @@ public class BranchFragment extends Fragment {
                 }
             });
 
-            mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
-                @Override
-                public void onMyLocationClick(@NonNull Location location) {
-                    mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).title("Ubicación Actual"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation,DEFAULT_ZOOM));
-                    getDeviceLocation();
-                    setBranches();
-                }
-            });
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(latLng.equals(branch1)||latLng.equals(branch2)||latLng.equals(branch3)){
-                        if(latLng.equals(branch1))
-                            direction(defaultLocation,branch1,"Sucursal Santa Tere");
-                        else if(latLng.equals(branch2))
-                            direction(defaultLocation,branch2,"Sucursal La Perla");
-                        else if(latLng.equals(branch3))
-                            direction(defaultLocation,branch3,"Sucursal Chapalita");
-                        Log.e(TAG, "HI I ENTERED THE IF");
-
 
                     }else{
                         mMap.clear();
@@ -160,7 +150,7 @@ public class BranchFragment extends Fragment {
                         mMap.addMarker(new MarkerOptions().position(latLng).title("Ubicación Seleccionada"));
                         defaultLocation = latLng;
                         Log.e(TAG, "HI I DIDNT ENTERED THE IF");
-
+                        selectedLocation = true;
                     }
                 }//
 
@@ -175,6 +165,8 @@ public class BranchFragment extends Fragment {
          */
         try {
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationEnabled  = true;
+
                 locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
@@ -227,6 +219,7 @@ public class BranchFragment extends Fragment {
         branches.add(branch1);
         branches.add(branch2);
         branches.add(branch3);
+        //dowtown
         defaultLocation = new LatLng(20.679505604723303, -103.34955953569988);
 
         return inflater.inflate(R.layout.fragment_branch, container, false);
@@ -280,7 +273,7 @@ public class BranchFragment extends Fragment {
 
                                 for (int k=0;k<steps.length();k++){
                                     String polyline = steps.getJSONObject(k).getJSONObject("polyline").getString("points");
-                                    List<LatLng> list = decodePoly(polyline);
+                                    List<LatLng> list = PolyUtil.decode(polyline);
 
                                     for (int l=0;l<list.size();l++){
                                         LatLng position = new LatLng((list.get(l)).latitude, (list.get(l)).longitude);
@@ -299,10 +292,10 @@ public class BranchFragment extends Fragment {
 
                         LatLngBounds bounds = new LatLngBounds.Builder()
                                 .include(new LatLng(origin.latitude, origin.longitude))
-                                .include(new LatLng(origin.latitude, origin.longitude)).build();
+                                .include(new LatLng(destiny.latitude, destiny.longitude)).build();
                         Point point = new Point();
                         getActivity().getWindowManager().getDefaultDisplay().getSize(point);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, point.x, 150, 30));
+                       // mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, point.x, 150, 30));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -338,7 +331,11 @@ public class BranchFragment extends Fragment {
             shift = 0;
             result = 0;
             do {
-                b = encoded.charAt(index++) - 63;
+                try {
+                    b = encoded.charAt(index++) - 63;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b > 0x20);
