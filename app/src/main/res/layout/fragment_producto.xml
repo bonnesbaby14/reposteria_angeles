@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#00FFFFFF"
     tools:context=".ui.producto.ProductoFragment">
 
 
@@ -227,6 +227,15 @@
                     android:backgroundTint="#FFFFFF"
                     app:srcCompat="@drawable/ic_baseline_delete_24"
                     tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnProductClear"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#00FFFFFF"
+                    android:src="@drawable/ic_baseline_cleaning_services_24" />
 
                 <ImageButton
                     android:id="@+id/btnScan"

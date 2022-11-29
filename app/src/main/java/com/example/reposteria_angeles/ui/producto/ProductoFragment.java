@@ -48,7 +48,7 @@ public class ProductoFragment extends Fragment {
     EditText price;
     EditText description;
     EditText productId;
-    ImageButton add, edit, delete, search, scan, list;
+    ImageButton add, edit, delete, search, scan, list, clear;
     String expiration;
     ControladorBD admin;
     private int day, month, year;
@@ -77,6 +77,15 @@ public class ProductoFragment extends Fragment {
         search = (ImageButton) root.findViewById(R.id.btnSearchProduct);
         scan = (ImageButton) root.findViewById(R.id.btnScan);
         list = (ImageButton) root.findViewById(R.id.btnList);
+        clear = (ImageButton) root.findViewById(R.id.btnProductClear);
+
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cleanComponents();
+            }
+        });
 
 
         date.setOnClickListener(new View.OnClickListener() {
