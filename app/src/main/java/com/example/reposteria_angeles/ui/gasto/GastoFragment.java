@@ -1,11 +1,17 @@
 package com.example.reposteria_angeles.ui.gasto;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +30,8 @@ import com.example.reposteria_angeles.ListaGasto;
 import com.example.reposteria_angeles.R;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,6 +53,8 @@ public class GastoFragment extends Fragment {
     ArrayList<String> gastosList, productsList;
     ArrayAdapter<String> productAdapter;
     String puntero;
+    private final static String CHANNEL_ID = "NOTIFICACION";
+    public final static int NOTIFICACION_ID = 0;
     private int dia, mes, anio;
     int cant;
     ControladorBD gasto;
@@ -112,7 +122,7 @@ public class GastoFragment extends Fragment {
                     registro.put("expenseCost", costoGasto);
                     registro.put("expenseNumber", numeroGasto);
                     registro.put("expenseDescripcion", descripcionGasto);
-                    
+
                     if (bd != null) {
 
                         //agregar producto
@@ -141,6 +151,8 @@ public class GastoFragment extends Fragment {
 
                                 cantidad = bd.update("product",registro2,"productId="+id,null);
 
+                                crearCanalNotificacion();
+                                crearNotificacion(finalProductos, nombreG);
                                 bd.close();
 
                                 Toast.makeText(GastoFragment.this.getContext(), "¡Compra registrada de manera exitosa!", Toast.LENGTH_SHORT).show();
@@ -385,6 +397,41 @@ public class GastoFragment extends Fragment {
         buscarProducto.setAdapter(adapter);
     }
 
+    private void crearCanalNotificacion() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//Nombre del canal
+            CharSequence name = "Notificación";
+//Instancia para gestionar el canal y el servicio de la notificación
+            NotificationChannel notificationChannel = new
+                    NotificationChannel(CHANNEL_ID, name,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }//if
+    }//crearCanalNotificacion
+
+    private void crearNotificacion(int cant, String nombre) {
+//Instancia para generar la notificaciòn, especificando el contexto de la aplicación y el
+//canal de comunicación
+        NotificationCompat.Builder builder = new
+                NotificationCompat.Builder(getContext(),CHANNEL_ID);
+//Características a incluir en la notificación
+        builder.setSmallIcon(R.mipmap.logo);
+        builder.setContentTitle("REPOSTERÍA ANGELES: se agregaron productos");
+        builder.setContentText("La cantidad de "+nombre+" en el inventario es: "+cant);
+        builder.setColor(Color.BLUE);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setLights(Color.RED, 1000,1000);
+        builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+//Especifica la Activity que aparece al momento de elegir la notificación
+
+//Instancia que gestiona la notificación con el dispositivo
+        NotificationManagerCompat notificationManagerCompat =
+                NotificationManagerCompat.from(getContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+    }//crearNotificacion
 
 
 

@@ -1,11 +1,19 @@
 package com.example.reposteria_angeles.ui.ingreso;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
+
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +30,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,6 +50,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+
 public class IngresoFragment extends Fragment {
 
     //private FragmentIngresoBinding binding;
@@ -51,6 +63,8 @@ public class IngresoFragment extends Fragment {
     ArrayAdapter<String> adapterCliente, adapterProducto;
     String puntero;
     ControladorBD ingreso;
+    private final static String CHANNEL_ID = "NOTIFICACION";
+    public final static int NOTIFICACION_ID = 0;
     int cant;
     private int dia, mes, anio;
 
@@ -180,6 +194,8 @@ public class IngresoFragment extends Fragment {
 
                             if (cant < actual){
                                 Toast.makeText(IngresoFragment.this.getContext(), "No puede realizar la venta, NO HAY PRODUCTO SUFICIENTE", Toast.LENGTH_SHORT).show();
+                                crearCanalNotificacion();
+                                crearNotificacion(cant, nombre);
                             }else{
                                 long x = 0;
                                 try {
@@ -461,5 +477,42 @@ public class IngresoFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         buscarCliente.setAdapter(adapter);
     }
+
+    private void crearCanalNotificacion() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//Nombre del canal
+            CharSequence name = "Notificación";
+//Instancia para gestionar el canal y el servicio de la notificación
+            NotificationChannel notificationChannel = new
+                    NotificationChannel(CHANNEL_ID, name,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }//if
+    }//crearCanalNotificacion
+
+    private void crearNotificacion(int cant, String nombre) {
+//Instancia para generar la notificaciòn, especificando el contexto de la aplicación y el
+//canal de comunicación
+        NotificationCompat.Builder builder = new
+                NotificationCompat.Builder(getContext(),CHANNEL_ID);
+//Características a incluir en la notificación
+        builder.setSmallIcon(R.mipmap.logo);
+        builder.setContentTitle("NOTIFICACIÓN REPOSTERÍA ANGELES");
+        builder.setContentText("El producto "+nombre+ " tiene "+cant+" elementos en el almacen");
+        builder.setColor(Color.BLUE);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setLights(Color.RED, 1000,1000);
+        builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+//Especifica la Activity que aparece al momento de elegir la notificación
+
+//Instancia que gestiona la notificación con el dispositivo
+        NotificationManagerCompat notificationManagerCompat =
+                NotificationManagerCompat.from(getContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+    }//crearNotificacion
+
 
 }//class
